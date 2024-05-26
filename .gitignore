@@ -1,0 +1,5 @@
+**/.vscode
+**/.idea
+**/*.db
+config.yaml
+log.txt
