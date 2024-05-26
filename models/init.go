@@ -38,5 +38,5 @@ func InitDB(cfg *config.Config) {
 }
 
 func Migrate() {
-	DB.AutoMigrate(&Student{})
+	DB.AutoMigrate(&User{})
 }
