@@ -1,7 +1,7 @@
 package service
 
 import (
-	"api2/models"
+	"API_BIG_WORK/models"
 	"errors"
 	"time"
 

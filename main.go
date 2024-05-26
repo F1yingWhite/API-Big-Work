@@ -1,10 +1,10 @@
 package main
 
 import (
-	"api2/config"
-	"api2/models"
-	"api2/server"
-	"api2/server/middlewares"
+	"API_BIG_WORK/config"
+	"API_BIG_WORK/models"
+	"API_BIG_WORK/server"
+	"API_BIG_WORK/server/middlewares"
 	"fmt"
 	"log"
 	"sync/atomic"

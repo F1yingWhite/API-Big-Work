@@ -1,8 +1,8 @@
 package server
 
 import (
-	"api2/server/middlewares"
-	"api2/server/service"
+	"API_BIG_WORK/server/middlewares"
+	"API_BIG_WORK/server/service"
 	"time"
 
 	"github.com/gin-contrib/cors"

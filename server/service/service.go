@@ -1,7 +1,7 @@
 package service
 
 import (
-	"api2/utils"
+	"API_BIG_WORK/utils"
 	"errors"
 	"log"
 	"net/http"
