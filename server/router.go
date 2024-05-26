@@ -31,7 +31,19 @@ func InitRouter() *gin.Engine {
 			user.POST("login", service.HandlerBind(&service.Login{}))
 			// POST api/user/register | 注册
 			user.POST("register", service.HandlerBind(&service.Register{}))
+
+			atuh := user.Group("")
+			atuh.Use(middlewares.TokenAuthorization())
+			{
+				// GET api/user | 获取用户信息
+				atuh.GET("", service.HandlerNoBind(&service.GetUser{}))
+				// PUT api/user/password | 修改密码
+				atuh.PUT("password", service.HandlerBind(&service.UpdatePassword{}))
+				// PUT api/user/username | 修改用户名
+				atuh.PUT("username", service.HandlerBind(&service.UpdateUserName{}))
+			}
 		}
+
 	}
 	return r
 }
