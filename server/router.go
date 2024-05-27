@@ -54,6 +54,7 @@ func InitRouter() *gin.Engine {
 			{
 				// GET api/movie | 获取指定id的电影
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
+				// GET api/movie/list | 获取电影列表
 			}
 		}
 

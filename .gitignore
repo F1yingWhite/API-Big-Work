@@ -3,3 +3,4 @@
 **/*.db
 config.yaml
 log.txt
+movies

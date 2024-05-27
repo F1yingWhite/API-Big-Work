@@ -7,7 +7,7 @@ import (
 )
 
 type GetMovie struct {
-	ID int `form:"id"`
+	ID int `form:"id" binding:"required"`
 }
 
 func (s *GetMovie) Handle(c *gin.Context) (any, error) {

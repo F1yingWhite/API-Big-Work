@@ -21,6 +21,16 @@ func CreateMovie(title string, author string, path string) error {
 	return DB.Create(&movie).Error
 }
 
+func CreateMovieWithLike(title string, author string, path string, like int) error {
+	movie := Movie{
+		Title:  title,
+		Author: author,
+		Like:   like,
+		Path:   path,
+	}
+	return DB.Create(&movie).Error
+}
+
 func GetMovieByID(id int) (Movie, error) {
 	var movie Movie
 	err := DB.Where("id = ?", id).First(&movie).Error
