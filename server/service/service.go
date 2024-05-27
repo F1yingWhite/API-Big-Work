@@ -67,7 +67,7 @@ func HandlerWithBindType(s Service, bindType int) gin.HandlerFunc {
 
 		res, err := s.Handle(c)
 		if err != nil {
-			response := utils.ErrorResponse(errors.New("参数类型错误"))
+			response := utils.ErrorResponse(err)
 			log.Printf("[LogID:%s] Response: %s", LogID, response.ErrorStr)
 			c.JSON(http.StatusBadRequest, response)
 		} else {

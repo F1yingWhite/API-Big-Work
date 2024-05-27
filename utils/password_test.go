@@ -7,10 +7,9 @@ import (
 )
 
 func TestHashPassword(t *testing.T) {
-	password := "xyh666"
-	salt := "6666"
+	password := "5050"
 
-	hashedPassword, err := utils.HashPasswordWithSalt(password, salt)
+	hashedPassword, err := utils.HashPassword(password, "afXHSqu0IS1kEDod3pdE")
 	if err != nil {
 		t.Errorf("Error hashing password: %v", err)
 	}
@@ -18,15 +17,17 @@ func TestHashPassword(t *testing.T) {
 }
 
 func TestComparePasswords(t *testing.T) {
-	password := "xyh666"
-	salt := "6666"
+	password := "5050"
+	salt := "afXHSqu0IS1kEDod3pdE"
 
-	hashedPassword, err := utils.HashPassword(password)
+	hashedPassword, err := utils.HashPassword(password, salt)
+	log.Print(hashedPassword)
 	if err != nil {
 		t.Errorf("Error hashing password: %v", err)
 	}
 
-	if !utils.ComparePasswordsWithSalt(hashedPassword, password, salt) {
+	if !utils.ComparePasswords(hashedPassword, password, salt) {
 		t.Errorf("Passwords do not match")
 	}
+	print("对的对的")
 }

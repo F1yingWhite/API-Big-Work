@@ -19,6 +19,7 @@ func InitRouter() *gin.Engine {
 	config.AllowAllOrigins = true
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	r.Use(cors.New(config))
+
 	api := r.Group("api")
 	api.Use(gin.Recovery())
 	api.Use(middlewares.RequestCounterMiddleware())

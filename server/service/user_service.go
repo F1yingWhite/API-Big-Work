@@ -1,6 +1,7 @@
 package service
 
 import (
+	"API_BIG_WORK/config"
 	"API_BIG_WORK/models"
 	"API_BIG_WORK/utils"
 	"errors"
@@ -18,7 +19,7 @@ func (s *Login) Handle(c *gin.Context) (any, error) {
 	if err != nil {
 		return nil, errors.New("用户不存在")
 	}
-	if !utils.ComparePasswords(user.Password, s.Password) {
+	if !utils.ComparePasswords(user.Password, s.Password, config.CFG.Salt) {
 		return nil, errors.New("密码错误")
 	}
 	//得到token
@@ -40,11 +41,7 @@ type Register struct {
 }
 
 func (s *Register) Handle(c *gin.Context) (any, error) {
-	password, err := utils.HashPassword(s.Password)
-	if err != nil {
-		return nil, err
-	}
-	if err := models.CreateUser(s.ID, s.Name, password); err != nil {
+	if err := models.CreateUser(s.ID, s.Name, s.Password); err != nil {
 		return nil, err
 	}
 	return nil, nil

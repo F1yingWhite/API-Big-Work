@@ -26,7 +26,6 @@ func Init() {
 			fmt.Printf("\rRequests in last second: %d", requestsLastSecond)
 		}
 	}()
-
 }
 
 func main() {

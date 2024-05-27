@@ -65,7 +65,7 @@ func ReadConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	CFG = cfg
 	return &cfg, nil
 }
 
