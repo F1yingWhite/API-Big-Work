@@ -35,15 +35,25 @@ func InitRouter() *gin.Engine {
 			// PUT api/user/password | 修改密码
 			user.PUT("password", service.HandlerBind(&service.UpdatePassword{}))
 
-			atuh := user.Group("")
-			atuh.Use(middlewares.TokenAuthorization())
+		}
+		//需要jwt验证的接口
+		atuh := api.Group("")
+		atuh.Use(middlewares.TokenAuthorization())
+		{
+			users := api.Group("user")
 			{
 				// GET api/user | 获取用户信息
-				atuh.GET("", service.HandlerNoBind(&service.GetUser{}))
+				users.GET("", service.HandlerNoBind(&service.GetUser{}))
 				// PUT api/user/username | 修改用户名
-				atuh.PUT("username", service.HandlerBind(&service.UpdateUserName{}))
+				users.PUT("username", service.HandlerBind(&service.UpdateUserName{}))
 				// DELETE api/user | 删除用户
-				atuh.DELETE("", service.HandlerNoBind(&service.DeleteUser{}))
+				users.DELETE("", service.HandlerNoBind(&service.DeleteUser{}))
+			}
+
+			movies := api.Group("movie")
+			{
+				// GET api/movie | 获取指定id的电影
+				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
 			}
 		}
 
