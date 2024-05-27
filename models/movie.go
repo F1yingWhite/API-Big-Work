@@ -8,10 +8,9 @@ import (
 
 type Movie struct {
 	gorm.Model
-	ID     int    `json:"id" gorm:"primaryKey"` //让path是uuid
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Like   int    `json:"like" gorm:"default:0"`
+	Like   uint   `json:"like" gorm:"default:0"`
 	Path   string `json:"path"`
 }
 
@@ -25,7 +24,7 @@ func CreateMovie(title string, author string, path string) error {
 	return DB.Create(&movie).Error
 }
 
-func CreateMovieWithLike(title string, author string, path string, like int) error {
+func CreateMovieWithLike(title string, author string, path string, like uint) error {
 
 	movie := Movie{
 		Title:  title,
@@ -64,4 +63,16 @@ func GetMovieByPath(path string) (Movie, error) {
 	var movie Movie
 	err := DB.Where("path = ?", path).First(&movie).Error
 	return movie, err
+}
+
+func LikeMovie(id uint) error {
+	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
+}
+
+func DeleteMovie(id uint) error {
+	return DB.Where("id = ?", id).Delete(&Movie{}).Error
+}
+
+func (m *Movie) Delete() error {
+	return DB.Delete(m).Error
 }

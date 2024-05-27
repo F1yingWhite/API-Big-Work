@@ -58,6 +58,14 @@ func InitRouter() *gin.Engine {
 				movies.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
 				// GET api/movie/moviepath | 看电影
 				movies.GET("/movies/:name", service.DowFile)
+				// GET api/movie/like | 点赞
+				movies.GET("like", service.HandlerBind(&service.LikeMovie{}))
+				// GET api/movie/author | 获取作者的电影
+				movies.GET("author", service.HandlerBindQuery(&service.GetMovieByAuthor{}))
+				// DELETE api/movie | 删除电影
+				movies.DELETE("", service.HandlerBindQuery(&service.DeleteMovie{}))
+				// POST api/movie | 上传电影
+				movies.POST("", service.HandlerBind(&service.UploadMovie{}))
 			}
 		}
 		// 静态文件服务，提供movie文件夹下的文件

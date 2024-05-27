@@ -2,10 +2,12 @@ package service
 
 import (
 	"API_BIG_WORK/models"
+	"errors"
 	"net/url"
 	"path"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type GetMovie struct {
@@ -48,4 +50,74 @@ func DowFile(c *gin.Context) {
 	filename := path.Join("./movies", name)
 	//响应一个文件
 	c.File(filename)
+}
+
+type LikeMovie struct {
+	ID uint `form:"id" binding:"required"`
+}
+
+func (s *LikeMovie) Handle(c *gin.Context) (any, error) {
+	err := models.LikeMovie(s.ID)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+type GetMovieByAuthor struct {
+	Page     int `form:"page" binding:"required"`
+	PageSize int `form:"pageSize" binding:"required"`
+}
+
+func (s *GetMovieByAuthor) Handle(c *gin.Context) (any, error) {
+	author, _ := c.Get("id")
+	movies, err := models.GetMovieByAuthor(author.(string), s.Page, s.PageSize)
+	if err != nil {
+		return nil, err
+	}
+	return movies, nil
+}
+
+type DeleteMovie struct {
+	ID uint `form:"id" binding:"required"`
+}
+
+func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
+	movie, err := models.GetMovieByID(int(s.ID))
+	if err != nil {
+		return nil, err
+	}
+	if movie.Author != c.GetString("id") {
+		return nil, errors.New("无权删除")
+	}
+	err = movie.Delete()
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+type UploadMovie struct {
+}
+
+func (s *UploadMovie) Handle(c *gin.Context) (any, error) {
+	videoName := c.PostForm("name")
+	if videoName == "" {
+		return nil, errors.New("视频名不能为空")
+	}
+	file, err := c.FormFile("video")
+	if err != nil {
+		return nil, err
+	}
+	//确认是不是mp4文件
+	if path.Ext(file.Filename) != ".mp4" {
+		return nil, errors.New("文件格式错误")
+	}
+	id := c.GetString("id")
+	path := path.Join("movies", uuid.New().String()+".mp4")
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		return nil, err
+	}
+	return nil, models.CreateMovie(videoName, id, path)
 }

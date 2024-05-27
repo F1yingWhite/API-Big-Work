@@ -49,6 +49,7 @@ func Migrate() {
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&Movie{})
 	DB.AutoMigrate(&History{})
+	DB.AutoMigrate(&Like{})
 }
 
 func moveFile(sourcePath, destPath string) error {
@@ -100,6 +101,6 @@ func InitData() {
 		}
 		filenameWithExtension := filepath.Base(mp4File)
 		filename := strings.TrimSuffix(filenameWithExtension, ".mp4")
-		CreateMovieWithLike(filename, fmt.Sprintf("user%d", r.Intn(20)), new_path, rand.Intn(200000))
+		CreateMovieWithLike(filename, fmt.Sprintf("user%d", r.Intn(20)), new_path, uint(rand.Intn(200000)))
 	}
 }
