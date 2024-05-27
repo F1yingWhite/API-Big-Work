@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"net/url"
+
+	"gorm.io/gorm"
+)
 
 type Movie struct {
 	gorm.Model
@@ -16,17 +20,18 @@ func CreateMovie(title string, author string, path string) error {
 		Title:  title,
 		Author: author,
 		Like:   0,
-		Path:   path,
+		Path:   url.PathEscape(path),
 	}
 	return DB.Create(&movie).Error
 }
 
 func CreateMovieWithLike(title string, author string, path string, like int) error {
+
 	movie := Movie{
 		Title:  title,
 		Author: author,
 		Like:   like,
-		Path:   path,
+		Path:   url.PathEscape(path),
 	}
 	return DB.Create(&movie).Error
 }
@@ -46,5 +51,11 @@ func GetMovieByAuthor(author string, page, pageSize int) ([]Movie, error) {
 func GetMovieByTitle(title string, page, pageSize int) ([]Movie, error) {
 	var movies []Movie
 	err := DB.Where("title = ?", title).Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
+	return movies, err
+}
+
+func GetMovieList(page, pageSize int) ([]Movie, error) {
+	var movies []Movie
+	err := DB.Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
 	return movies, err
 }

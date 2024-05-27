@@ -17,3 +17,16 @@ func (s *GetMovie) Handle(c *gin.Context) (any, error) {
 	}
 	return movie, nil
 }
+
+type GetMovieList struct {
+	Page     int `form:"page" binding:"required"`
+	PageSize int `form:"pageSize" binding:"required"`
+}
+
+func (s *GetMovieList) Handle(c *gin.Context) (any, error) {
+	movies, err := models.GetMovieList(s.Page, s.PageSize)
+	if err != nil {
+		return nil, err
+	}
+	return movies, nil
+}

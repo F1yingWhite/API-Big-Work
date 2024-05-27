@@ -3,6 +3,7 @@ package server
 import (
 	"API_BIG_WORK/server/middlewares"
 	"API_BIG_WORK/server/service"
+	"path"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -55,9 +56,17 @@ func InitRouter() *gin.Engine {
 				// GET api/movie | 获取指定id的电影
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
 				// GET api/movie/list | 获取电影列表
+				movies.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
+
 			}
 		}
-
+		r.GET("/movies/:name", DowFile)
 	}
 	return r
+}
+
+func DowFile(c *gin.Context) {
+	name := c.Param("name")
+	filename := path.Join("./movies", name)
+	c.File(filename)
 }
