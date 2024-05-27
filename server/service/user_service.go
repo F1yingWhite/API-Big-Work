@@ -61,12 +61,12 @@ func (s *GetUser) Handle(c *gin.Context) (any, error) {
 
 type UpdatePassword struct {
 	Id          string `form:"id"`
-	OldPassword string `form:"old_password"`
-	NewPassword string `form:"new_password"`
+	OldPassword string `form:"oldPassword"`
+	NewPassword string `form:"newPassword"`
 }
 
 func (s *UpdatePassword) Handle(c *gin.Context) (any, error) {
-	err := models.UpdateUserPassword(s.Id, s.NewPassword, s.OldPassword)
+	err := models.UpdateUserPassword(s.Id, s.OldPassword, s.NewPassword)
 	return nil, err
 }
 
@@ -77,5 +77,13 @@ type UpdateUserName struct {
 func (s *UpdateUserName) Handle(c *gin.Context) (any, error) {
 	id, _ := c.Get("id")
 	err := models.UpdateUserUsername(id.(string), s.Name)
+	return nil, err
+}
+
+type DeleteUser struct{}
+
+func (s *DeleteUser) Handle(c *gin.Context) (any, error) {
+	id, _ := c.Get("id")
+	err := models.DeleteUser(id.(string))
 	return nil, err
 }

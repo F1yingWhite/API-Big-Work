@@ -15,6 +15,15 @@ type User struct {
 	Password string `json:"-" gorm:"not null"`
 }
 
+func (u *User) Delete() error {
+	//删除用户
+	return DB.Delete(u).Error
+}
+
+func DeleteUser(ID string) error {
+	return DB.Where("id = ?", ID).Delete(&User{}).Error
+}
+
 func CreateUser(ID string, username string, password string) error {
 	password, err := utils.HashPassword(password, config.CFG.Salt)
 	if err != nil {

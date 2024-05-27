@@ -1,11 +1,10 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type Movie struct {
 	gorm.Model
+	ID     int    `json:"id" gorm:"primaryKey"`
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Like   int    `json:"like"`
@@ -28,8 +27,14 @@ func GetMovieByID(id int) (Movie, error) {
 	return movie, err
 }
 
-func GetMovieByAuthor(author string) ([]Movie, error) {
+func GetMovieByAuthor(author string, page, pageSize int) ([]Movie, error) {
 	var movies []Movie
-	err := DB.Where("author = ?", author).Find(&movies).Error
+	err := DB.Where("author = ?", author).Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
+	return movies, err
+}
+
+func GetMovieByTitle(title string, page, pageSize int) ([]Movie, error) {
+	var movies []Movie
+	err := DB.Where("title = ?", title).Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
 	return movies, err
 }

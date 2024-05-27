@@ -1,7 +1,9 @@
 package models
 
+import "time"
+
 type History struct {
-	CreatedAt string `json:"created_at"`
-	MovieID   string `json:"movie_id"`
-	UserID    string `json:"user_id"`
+	CreatedAt *time.Time `json:"time"`
+	MovieID   string     `json:"movie_id"`
+	UserID    string     `json:"user_id"`
 }
