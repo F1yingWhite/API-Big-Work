@@ -3,7 +3,6 @@ package server
 import (
 	"API_BIG_WORK/server/middlewares"
 	"API_BIG_WORK/server/service"
-	"path"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -38,10 +37,10 @@ func InitRouter() *gin.Engine {
 
 		}
 		//需要jwt验证的接口
-		atuh := api.Group("")
-		atuh.Use(middlewares.TokenAuthorization())
+		auth := api.Group("")
+		auth.Use(middlewares.TokenAuthorization())
 		{
-			users := api.Group("user")
+			users := auth.Group("user")
 			{
 				// GET api/user | 获取用户信息
 				users.GET("", service.HandlerNoBind(&service.GetUser{}))
@@ -51,22 +50,17 @@ func InitRouter() *gin.Engine {
 				users.DELETE("", service.HandlerNoBind(&service.DeleteUser{}))
 			}
 
-			movies := api.Group("movie")
+			movies := auth.Group("movie")
 			{
 				// GET api/movie | 获取指定id的电影
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
 				// GET api/movie/list | 获取电影列表
 				movies.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
-
+				// GET api/movie/moviepath | 看电影
+				movies.GET("/movies/:name", service.DowFile)
 			}
 		}
-		r.GET("/movies/:name", DowFile)
+		// 静态文件服务，提供movie文件夹下的文件
 	}
 	return r
-}
-
-func DowFile(c *gin.Context) {
-	name := c.Param("name")
-	filename := path.Join("./movies", name)
-	c.File(filename)
 }

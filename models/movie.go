@@ -11,7 +11,7 @@ type Movie struct {
 	ID     int    `json:"id" gorm:"primaryKey"` //让path是uuid
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Like   int    `json:"like"`
+	Like   int    `json:"like" gorm:"default:0"`
 	Path   string `json:"path"`
 }
 
@@ -58,4 +58,10 @@ func GetMovieList(page, pageSize int) ([]Movie, error) {
 	var movies []Movie
 	err := DB.Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
 	return movies, err
+}
+
+func GetMovieByPath(path string) (Movie, error) {
+	var movie Movie
+	err := DB.Where("path = ?", path).First(&movie).Error
+	return movie, err
 }

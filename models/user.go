@@ -16,7 +16,6 @@ type User struct {
 }
 
 func (u *User) Delete() error {
-	//删除用户
 	return DB.Delete(u).Error
 }
 
