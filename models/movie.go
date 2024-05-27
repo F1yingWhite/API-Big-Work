@@ -8,7 +8,7 @@ import (
 
 type Movie struct {
 	gorm.Model
-	ID     int    `json:"id" gorm:"primaryKey"`
+	ID     int    `json:"id" gorm:"primaryKey"` //让path是uuid
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Like   int    `json:"like"`

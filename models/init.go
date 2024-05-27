@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -50,6 +51,14 @@ func Migrate() {
 	DB.AutoMigrate(&History{})
 }
 
+func moveFile(sourcePath, destPath string) error {
+	err := os.Rename(sourcePath, destPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func InitData() {
 	//查询用户0是否存在，如果存在则不再创建
 	if _, err := GetUserByID("user0"); err == nil {
@@ -65,13 +74,32 @@ func InitData() {
 		os.MkdirAll("movies", os.ModePerm)
 	}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	filepath.Walk("movies", func(path string, info os.FileInfo, err error) error {
+	movieDir := "movies"
+	var mp4Files []string
+
+	err = filepath.Walk(movieDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && strings.HasSuffix(strings.ToLower(info.Name()), ".mp4") {
-			CreateMovieWithLike(strings.TrimSuffix(info.Name(), ".mp4"), fmt.Sprintf("user%d", r.Intn(21)), path, r.Intn(200000))
+		// 检查文件扩展名是否为 .mp4
+		if !info.IsDir() && filepath.Ext(path) == ".mp4" {
+			mp4Files = append(mp4Files, path)
 		}
 		return nil
 	})
+	if err != nil {
+		log.Println(err)
+	}
+
+	for _, mp4File := range mp4Files {
+		new_id := uuid.New().String()
+		new_path := fmt.Sprintf("movies/%s.mp4", new_id)
+		err := moveFile(mp4File, new_path)
+		if err != nil {
+			log.Println(err)
+		}
+		filenameWithExtension := filepath.Base(mp4File)
+		filename := strings.TrimSuffix(filenameWithExtension, ".mp4")
+		CreateMovieWithLike(filename, fmt.Sprintf("user%d", r.Intn(20)), new_path, rand.Intn(200000))
+	}
 }
