@@ -39,4 +39,6 @@ func InitDB(cfg *config.Config) {
 
 func Migrate() {
 	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&Movie{})
+	DB.AutoMigrate(&History{})
 }
