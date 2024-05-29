@@ -1,12 +1,3 @@
-**/.vscode
-**/.idea
-**/*.db
-config.yaml
-log.txt
-movies
-docker-compose.yml
-**/node_modules
-
 # Nuxt dev/build outputs
 .output
 .data
