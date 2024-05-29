@@ -28,7 +28,7 @@ func ReadConfig() (*Config, error) {
 		}
 
 		config := &Config{
-			Dsn:              "host=localhost user=postgres password=123 dbname=API_BIG_WORK port=5432 sslmode=disable",
+			Dsn:              "host=localhost user=postgres password=1234 dbname=API_BIG_WORK port=5432 sslmode=disable",
 			LogFile:          "log.txt",
 			JWTSigningString: generateRandomString(20),
 			Salt:             generateRandomString(20),

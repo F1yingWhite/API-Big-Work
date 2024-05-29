@@ -66,7 +66,20 @@ func GetMovieByPath(path string) (Movie, error) {
 }
 
 func LikeMovie(id uint) error {
+	
 	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
+}
+
+// 推荐电影 每次推荐一个，推荐like最高的，如果like相同，推荐最新的，用户已经看过的不推荐
+func RecommendMovie(userID string) (Movie, error) {
+	var movie Movie
+	err := DB.Raw(`
+	SELECT movies.* FROM movies
+	LEFT JOIN histories ON movies.id = histories.movie_id AND histories.user_id = ?
+	WHERE histories.movie_id IS NULL
+	ORDER BY movies.like DESC, movies.created_at DESC
+	LIMIT 1`, userID).Scan(&movie).Error
+	return movie, err
 }
 
 func DeleteMovie(id uint) error {
