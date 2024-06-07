@@ -45,9 +45,9 @@
         try {
             // await $userStore.getTokens()
             await $userStore.login(id.value, password.value)
-            await $userStore.getUser()
-            await $generalStore.getRandomUsers('suggested')
-            await $generalStore.getRandomUsers('following')
+            // await $userStore.getUser()
+            // await $generalStore.getRandomUsers('suggested')
+            // await $generalStore.getRandomUsers('following')
             $generalStore.isLoginOpen = false
         } catch (error) {
             // TODO:在后端加上错误码
