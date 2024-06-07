@@ -9,53 +9,77 @@ export const useUserStore = defineStore('user', {
     id: '',
     name: '',
     bio: '',
-    image: ''
+    image: '',
+    token: ''
   }),
   actions: {
 
     async getTokens() {
       // TODO:接口
-      await $axios.get('/sanctum/csrf-cookie')
+      await $axios.get('/api/sanctum/csrf-cookie')
     },
 
-    async login(email, password) {
-      // TODO:接口
-      await $axios.post('/login', {
-        email: email,
-        password: password
-      })
+    // TODO:应该是要改成id和密码
+    async login(id, password) {
+      try{
+        // TODO:接口
+        await $axios.post('/api/user/login', {
+          // email: email,
+          id:id,
+          password: password
+        })
+
+        // 假设 token 在 response.data.token 中
+        this.token = response.data.token
+        this.id = response.data.user.id
+
+        // 将 token 存储在 localStorage 中
+        localStorage.setItem('token', this.token)
+
+        // 设置全局 axios 的默认 Authorization header
+        $axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+      } catch (error) {
+        console.error(error)
+        // 处理错误，例如设置一个错误状态变量
+      }
     },
 
     async register(name, email, password, confirmPassword) {
-      // TODO:接口
-      await $axios.post('/register', {
-        name: name,
-        email: email,
-        password: password,
-        password_confirmation: confirmPassword
-      })
+      try {
+        const response = await $axios.post('/api/user/register', {
+          name: name,
+          email: email,
+          password: password,
+          password_confirmation: confirmPassword
+        })
+        // 注册成功后可以自动登录
+        this.login(email, password)
+      } catch (error) {
+        console.error(error)
+        // 处理错误
+      }
     },
 
     async getUser() {
       // TODO:接口
-      let res = await $axios.get('/api/logged-in-user')
+      let res = await $axios.get('/api/user')
       
-      this.$state.id = res.data[0].id
-      this.$state.name = res.data[0].name
-      this.$state.bio = res.data[0].bio
-      this.$state.image = res.data[0].image
+      this.$state.id = res.data.id
+      this.$state.name = res.data.username
+      // this.$state.bio = res.data.bio
+      // this.$state.image = res.data.image
     },
 
     async updateUserImage(data) {
       // TODO:接口
-      return await $axios.post('/api/update-user-image', data)
+      return await $axios.post('/api/user/update-user-image', data)
     },
 
     async updateUser(name, bio) {
       // TODO:接口
-      return await $axios.patch('/api/update-user', {
+      return await $axios.put('/api/user', {
         name: name,
-        bio: bio
+        // bio: bio
       })
     },
 
@@ -148,18 +172,20 @@ export const useUserStore = defineStore('user', {
     },
 
     async logout() {
-      await $axios.post('/logout')
+      await $axios.post('/api/logout')
       this.resetUser()
+      localStorage.removeItem('token')
+      delete $axios.defaults.headers.common['Authorization']
     },
 
-    resetUser() {      
-      this.$state.id = ''
-      this.$state.name = ''
-      this.$state.email = ''
-      this.$state.bio = ''
-      this.$state.image = ''
+    resetUser() {
+      this.id = ''
+      this.name = ''
+      this.email = ''
+      this.bio = ''
+      this.image = ''
+      this.token = ''
     }
-
   },
   persist: true,
 })

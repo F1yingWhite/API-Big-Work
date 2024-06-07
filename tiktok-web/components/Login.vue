@@ -3,9 +3,9 @@
     <div class="px-6 pb-1.5 text-[15px]">邮箱</div>
     <div class="px-6 pb-2 text-[15px]">
         <TextInput
-            placeholder="输入邮箱"
-            v-model:input="email"
-            inputType="email"
+            placeholder="输入ID"
+            v-model:input="id"
+            inputType="text"
             :autoFocus="true"
             error=""
         />
@@ -22,8 +22,8 @@
 
     <div class="px-6 pb-2 mt-6">
         <button 
-            :disabled="(!email || !password)"
-            :class="(!email || !password) ? 'bg-gray-200' : 'bg-[#F02C56]'"
+            :disabled="(!id || !password)"
+            :class="(!id || !password) ? 'bg-gray-200' : 'bg-[#F02C56]'"
             @click="$event => login()" 
             class="w-full text-[17px] font-semibold text-white py-3 rounded-sm"
         >
@@ -33,8 +33,25 @@
 </template>
 
 <script setup>
-let email = ref(null)
-let password = ref(null)
-let errors = ref(null)
+    const { $userStore, $generalStore } = useNuxtApp()
+    // let email = ref(null)
+    let id = ref(null)
+    let password = ref(null)
+    let errors = ref(null)
 
+    const login = async () => {
+        errors.value = null
+
+        try {
+            // await $userStore.getTokens()
+            await $userStore.login(id.value, password.value)
+            await $userStore.getUser()
+            await $generalStore.getRandomUsers('suggested')
+            await $generalStore.getRandomUsers('following')
+            $generalStore.isLoginOpen = false
+        } catch (error) {
+            // TODO:在后端加上错误码
+            // errors.value = error.response.data.errors
+        }
+    }
 </script>
