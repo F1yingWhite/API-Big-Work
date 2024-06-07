@@ -14,10 +14,12 @@ export const useUserStore = defineStore('user', {
   actions: {
 
     async getTokens() {
+      // TODO:接口
       await $axios.get('/sanctum/csrf-cookie')
     },
 
     async login(email, password) {
+      // TODO:接口
       await $axios.post('/login', {
         email: email,
         password: password
@@ -25,6 +27,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async register(name, email, password, confirmPassword) {
+      // TODO:接口
       await $axios.post('/register', {
         name: name,
         email: email,
@@ -34,6 +37,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async getUser() {
+      // TODO:接口
       let res = await $axios.get('/api/logged-in-user')
       
       this.$state.id = res.data[0].id
@@ -43,10 +47,12 @@ export const useUserStore = defineStore('user', {
     },
 
     async updateUserImage(data) {
+      // TODO:接口
       return await $axios.post('/api/update-user-image', data)
     },
 
     async updateUser(name, bio) {
+      // TODO:接口
       return await $axios.patch('/api/update-user', {
         name: name,
         bio: bio
@@ -54,14 +60,17 @@ export const useUserStore = defineStore('user', {
     },
 
     async createPost(data) {
+      // TODO:接口
       return await $axios.post('/api/posts', data)
     },
 
     async deletePost(post) {
+      // TODO:接口
       return await $axios.delete(`/api/posts/${post.id}`)
     },
 
     async addComment(post, comment) {
+      // TODO:接口
       let res = await $axios.post('/api/comments', {
         post_id: post.id,
         comment: comment
@@ -73,6 +82,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async deleteComment(post, commentId) {
+      // TODO:接口
       let res = await $axios.delete(`/api/comments/${commentId}`, {
         post_id: post.id
       })
@@ -83,6 +93,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async updateComments(post) {
+      // TODO:接口
       let res = await $axios.get(`/api/profiles/${post.user.id}`)
 
       for (let i = 0; i < res.data.posts.length; i++) {
@@ -95,6 +106,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async likePost(post, isPostPage) {
+      // TODO:接口
       let res = await $axios.post('/api/likes', {
         post_id: post.id,
       })
@@ -126,6 +138,7 @@ export const useUserStore = defineStore('user', {
         if (like.user_id === this.id) { deleteLike = like }
       });
       
+      // TODO: 接口
       let res = await $axios.delete('/api/likes/' + deleteLike.id)
 
       for (let i = 0; i < singlePost.likes.length; i++) {
