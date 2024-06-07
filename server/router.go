@@ -16,7 +16,7 @@ func InitRouter() *gin.Engine {
     config := cors.DefaultConfig()
     config.ExposeHeaders = []string{"Authorization"}
     config.AllowCredentials = true
-    config.AllowAllOrigins = true
+    config.AllowOrigins = []string{"http://localhost:3000"}
     config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 
     // 让他能接收所有域的请求
