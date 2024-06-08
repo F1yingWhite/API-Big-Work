@@ -18,52 +18,51 @@ export const useUserStore = defineStore('user', {
       // TODO:接口
       await $axios.get('/api/sanctum/csrf-cookie')
     },
-
-    // TODO:应该是要改成id和密码
     async login(id, password) {
-      try{
-        // TODO:接口
-        await $axios.post('/api/user/login', {
-          // email: email,
-          id:id,
+      try {
+        const response = await $axios.post('/api/user/login', {
+          id: id,
           password: password
         })
-
-        // 假设 token 在 response.data.token 中
+    
         this.token = response.data.token
-        this.id = response.data.user.id
-
-        // 将 token 存储在 localStorage 中
+        this.id = id
+    
         localStorage.setItem('token', this.token)
-
-        // 设置全局 axios 的默认 Authorization header
         $axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
       } catch (error) {
-        console.error(error)
-        // 处理错误，例如设置一个错误状态变量
+        if (error.response && error.response.status === 400) {
+          throw new Error(error.response.data.error)
+        } else {
+          console.error(error)
+          throw new Error('登录失败，请检查账号和密码。')
+        }
       }
     },
-
-    async register(name, email, password, confirmPassword) {
+    
+    async register(id, password, name) {
       try {
-        const response = await $axios.post('/api/user/register', {
+        await $axios.post('/api/user/register', {
           name: name,
-          email: email,
-          password: password,
-          password_confirmation: confirmPassword
+          id: id,
+          password: password
         })
-        // 注册成功后可以自动登录
-        this.login(email, password)
+        await this.login(id, password)
       } catch (error) {
-        console.error(error)
-        // 处理错误
+        if (error.response && error.response.status === 400) {
+          throw new Error(error.response.data.error)
+        } else {
+          console.error(error)
+          throw new Error('注册失败，账号已存在。')
+        }
       }
     },
-
+    
     async getUser() {
       // TODO:接口
       let res = await $axios.get('/api/user')
       
+      // this.$state.token = res.data.Authorization
       this.$state.id = res.data.id
       this.$state.name = res.data.username
       // this.$state.bio = res.data.bio
