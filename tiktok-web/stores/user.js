@@ -61,12 +61,9 @@ export const useUserStore = defineStore('user', {
     async getUser() {
       // TODO:接口
       let res = await $axios.get('/api/user')
-      
-      // this.$state.token = res.data.Authorization
+
       this.$state.id = res.data.id
       this.$state.name = res.data.username
-      // this.$state.bio = res.data.bio
-      // this.$state.image = res.data.image
     },
 
     async updateUserImage(data) {
@@ -170,8 +167,9 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    // TODO:可能要加这个接口？登出后把token清掉
     async logout() {
-      await $axios.post('/api/logout')
+      // await $axios.post('/api/logout')
       this.resetUser()
       localStorage.removeItem('token')
       delete $axios.defaults.headers.common['Authorization']

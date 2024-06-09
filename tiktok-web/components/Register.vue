@@ -64,7 +64,7 @@
       await $userStore.login(id.value, password.value)
       $generalStore.isLoginOpen = false
     } catch (error) {
-      errors.value = error.message
+      errors.value = "账号已存在"
     }
   }
   </script>
