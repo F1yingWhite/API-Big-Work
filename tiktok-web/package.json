@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.7.2",
     "nuxt": "^3.11.2",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "vue": "^3.4.27",
+    "vue-advanced-cropper": "^2.8.8",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
