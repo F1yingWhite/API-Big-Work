@@ -89,11 +89,14 @@
 
 <script setup>
     const { $userStore,$generalStore } = useNuxtApp()
+    import { useRoute,useRouter } from 'vue-router';
+
     const route = useRoute()
     const router = useRouter()
     let showMenu = ref(false)
 
     onMounted(() => {
+        console.log('User ID on mount:', $userStore.id)
         document.addEventListener('mouseup', function(e) {
             let popupMenu = document.getElementById('PopupMenu');
             if (!popupMenu.contains(e.target)) {
@@ -101,6 +104,7 @@
             }
         });
     })
+
 
     const isLoggedIn = () => {
         if ($userStore.id) {
@@ -112,11 +116,12 @@
 
     const logout = () => {
         try {
+            console.log('Logging out...');
             $userStore.logout()
-            // 退回到主页
             router.push('/')
         } catch (error) {
             console.log(error)
         }
     }
+
 </script>

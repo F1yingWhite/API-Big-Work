@@ -18,6 +18,7 @@ export const useUserStore = defineStore('user', {
       // TODO:接口
       await $axios.get('/api/sanctum/csrf-cookie')
     },
+    
     async login(id, password) {
       try {
         const response = await $axios.post('/api/user/login', {
@@ -79,14 +80,15 @@ export const useUserStore = defineStore('user', {
       })
     },
 
+    // 上传视频,加上参数(video:file,name:string)
     async createPost(data) {
       // TODO:接口
-      return await $axios.post('/api/posts', data)
+      return await $axios.post('/api/movie', data)
     },
 
     async deletePost(post) {
       // TODO:接口
-      return await $axios.delete(`/api/posts/${post.id}`)
+      return await $axios.delete(`/api/movie/${post.id}`)
     },
 
     async addComment(post, comment) {
