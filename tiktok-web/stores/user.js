@@ -14,11 +14,6 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
 
-    async getTokens() {
-      // TODO:接口
-      await $axios.get('/api/sanctum/csrf-cookie')
-    },
-    
     async login(id, password) {
       try {
         const response = await $axios.post('/api/user/login', {
@@ -26,11 +21,11 @@ export const useUserStore = defineStore('user', {
           password: password
         })
     
-        this.token = response.data.token
+        this.token = response.data.data[0].token
         this.id = id
     
         localStorage.setItem('token', this.token)
-        $axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+        $axios.defaults.headers.common['Authorization'] = `${this.token}`
       } catch (error) {
         if (error.response && error.response.status === 400) {
           throw new Error(error.response.data.error)

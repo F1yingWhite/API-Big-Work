@@ -7,45 +7,60 @@ export const useProfileStore = defineStore('profile', {
   state: () => ({
     id: '',
     name: '',
-    bio: '',
-    image: '',
+    posts: [], // 用于存储视频列表的数组
     post: null,
-    posts: null,
     allLikes: 0,
   }),
+
   actions: {
     async getProfile(id) {
       this.resetUser()
-      // TODO : 改成相对应的接口，以及下面的参数也要改
-      let res = await $axios.get(`/api/profiles/${id}`)
-      
-      this.$state.id = res.data.user[0].id
-      this.$state.name = res.data.user[0].name
-      this.$state.bio = res.data.user[0].bio
-      this.$state.image = res.data.user[0].image
+      try {
+        const page = 1; // 页码
+        const pageSize = 10; // 每页条数
 
-      this.$state.posts = res.data.posts
+        const response = await $axios.get(`/api/movie/author`, {
+          params: {
+            page: page,
+            pageSize: pageSize
+          }
+        });
+        
+        if (response && response.data && response.data.data) {
+          const videos = response.data.data;
 
-      this.allLikesCount()
+          this.$state.posts = videos.map(video => ({
+            path: video.path,
+            title: video.title,
+            like: video.like
+          }));
+
+          this.$state.id = id;
+          this.$state.name = videos[0].author;
+
+          console.log(this.$state.posts);
+          console.log(this.$state.allLikes);
+          // console.log(`http://127.0.0.1:8888/api/movie/${this.$state.posts[0].path}`);
+
+          this.allLikesCount();
+        } else {
+          console.error('Unexpected response structure:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
     },
 
     allLikesCount() {
-        this.allLikes = 0
-        for (let i = 0; i < this.posts.length; i++) {
-            const post = this.posts[i];
-             for (let j = 0; j < post.likes.length; j++) {
-                this.allLikes++
-             }
-        }
+      this.allLikes = this.$state.posts.reduce((sum, post) => sum + post.like, 0);
     },
 
-    resetUser() {      
-        this.$state.id = ''
-        this.$state.name = ''
-        this.$state.bio = ''
-        this.$state.image = ''
-        this.$state.posts = ''
-      }
+    resetUser() {
+      this.$state.id = ''
+      this.$state.name = ''
+      this.$state.posts = []
+      this.$state.allLikes = 0
+    }
   },
   persist: true,
 })

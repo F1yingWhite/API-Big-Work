@@ -241,7 +241,7 @@ const createPost = async () => {
 
     let data = new FormData();
     data.append('video', fileData.value || '')
-    data.append('text', caption.value || '')
+    data.append('name', caption.value || '')
 
     let hasError = false;
 
