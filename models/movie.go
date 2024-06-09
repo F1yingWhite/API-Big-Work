@@ -66,7 +66,6 @@ func GetMovieByPath(path string) (Movie, error) {
 }
 
 func LikeMovie(id uint) error {
-	
 	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
 }
 
