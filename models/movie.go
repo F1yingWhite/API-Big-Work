@@ -10,7 +10,7 @@ type Movie struct {
 	gorm.Model
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Like   uint   `json:"like" gorm:"default:0"`
+	Like   uint   `json:"like" gorm:"default:0;index"`
 	Path   string `json:"path"`
 }
 
@@ -68,19 +68,37 @@ func GetMovieByPath(path string) (Movie, error) {
 // 推荐电影 每次推荐一个，推荐like最高的，如果like相同，推荐最新的，用户已经看过的不推荐
 func RecommendMovie(userID string) (Movie, error) {
 	var movie Movie
-	err := DB.Raw(`
-	SELECT movies.* FROM movies
-	LEFT JOIN histories ON movies.id = histories.movie_id AND histories.user_id = ?
-	WHERE histories.movie_id IS NULL
-	ORDER BY movies.like DESC, movies.created_at DESC
-	LIMIT 1`, userID).Scan(&movie).Error
+	err := DB.Joins("LEFT JOIN history ON movies.id = history.movie_id AND history.user_id = ?", userID).
+		Where("history.movie_id IS NULL").
+		Order("movies.like DESC, movies.created_at DESC").
+		Limit(1).
+		Find(&movie).Error
 	return movie, err
 }
-
 func DeleteMovie(id uint) error {
 	return DB.Where("id = ?", id).Delete(&Movie{}).Error
 }
 
 func (m *Movie) Delete() error {
 	return DB.Delete(m).Error
+}
+
+func UpMovie(id uint) (Movie, error) {
+	// 查找比当前id小的最大的id,如果没有就找最后一个id
+	var movie Movie
+	err := DB.Where("id < ?", id).Order("id DESC").First(&movie).Error
+	// 如果没有找到就找最后一个
+	if err != nil {
+		err = DB.Order("id DESC").First(&movie).Error
+	}
+	return movie, err
+}
+
+func DownMovie(id uint) (Movie, error) {
+	var movie Movie
+	err := DB.Where("id > ?", id).Order("id ASC").First(&movie).Error
+	if err != nil {
+		err = DB.Order("id ASC").First(&movie).Error
+	}
+	return movie, err
 }

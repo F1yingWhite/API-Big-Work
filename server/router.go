@@ -74,9 +74,14 @@ func InitRouter() *gin.Engine {
 				movies.DELETE("", service.HandlerBindQuery(&service.DeleteMovie{}))
 				// POST api/movie | 上传电影
 				movies.POST("", service.HandlerBind(&service.UploadMovie{}))
+				// GET api/movie/recommend | 推荐电影
+				movies.GET("recommend", service.HandlerNoBind(&service.RecommendMovie{}))
+				// POST api/move/up | 查看上一个电影
+				movies.POST("up", service.HandlerBind(&service.UpMovie{}))
+				// POST api/movie/down | 查找下一个电影
+				movies.POST("down", service.HandlerBind(&service.DownMovie{}))
 			}
 		}
-		// 静态文件服务，提供movie文件夹下的文件
 	}
 	return r
 }

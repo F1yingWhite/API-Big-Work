@@ -122,3 +122,41 @@ func (s *UploadMovie) Handle(c *gin.Context) (any, error) {
 	}
 	return nil, models.CreateMovie(videoName, id, path)
 }
+
+type RecommendMovie struct {
+}
+
+func (s *RecommendMovie) Handle(c *gin.Context) (any, error) {
+	id := c.GetString("id")
+	RecommendMovies, err := models.RecommendMovie(id)
+	if err != nil {
+		return nil, err
+	}
+	return RecommendMovies, nil
+}
+
+type UpMovie struct {
+	MoveId int `form:"moveId" binding:"required"`
+}
+
+func (s *UpMovie) Handle(c *gin.Context) (any, error) {
+	// 找id比当前id小的最大的id
+	movie, err := models.UpMovie(uint(s.MoveId))
+	if err != nil {
+		return nil, err
+	}
+	return movie, nil
+}
+
+type DownMovie struct {
+	MoveId int `form:"moveId" binding:"required"`
+}
+
+func (s *DownMovie) Handle(c *gin.Context) (any, error) {
+	// 找id比当前id大的最小的id
+	movie, err := models.DownMovie(uint(s.MoveId))
+	if err != nil {
+		return nil, err
+	}
+	return movie, nil
+}
