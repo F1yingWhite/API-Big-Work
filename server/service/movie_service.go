@@ -84,6 +84,25 @@ func (s *LikeMovie) Handle(c *gin.Context) (any, error) {
 	return nil, nil
 }
 
+type LikeMovieLeMe struct {
+}
+
+func (s *LikeMovieLeMe) Handle(c *gin.Context) (any, error) {
+	id := c.GetString("id")
+	//转为uint
+	movie_id := c.Param("id")
+	movieID, err := strconv.ParseUint(movie_id, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	_, err = models.GetLikeByIdAndMovieId(id, uint(movieID))
+	if err != nil {
+		return map[string]string{"like": "false"}, nil
+	} else {
+		return map[string]string{"like": "true"}, nil
+	}
+}
+
 type GetMovieByAuthor struct {
 	Page     int `form:"page" binding:"required"`
 	PageSize int `form:"pageSize" binding:"required"`

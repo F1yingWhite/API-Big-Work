@@ -25,9 +25,15 @@ func LikeMovie(id uint, userID string) error {
 		//点赞数加一
 		return DB.Model(&Movie{}).Where("id = ?", id).Update("likes", gorm.Expr("likes + ?", 1)).Error
 	}
-	if err:= DB.Delete(&like).Error;err != nil {
+	if err := DB.Delete(&like).Error; err != nil {
 		return err
 	}
 	//点赞数减一
 	return DB.Model(&Movie{}).Where("id = ?", id).Update("likes", gorm.Expr("likes - ?", 1)).Error
+}
+
+func GetLikeByIdAndMovieId(userid string, movieid uint) (Like, error) {
+	var like Like
+	err := DB.Where("movie_id = ? AND user_id = ?", movieid, userid).First(&like).Error
+	return like, err
 }
