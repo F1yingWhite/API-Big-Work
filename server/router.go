@@ -69,7 +69,7 @@ func InitRouter() *gin.Engine {
 				// POST api/movie/like/:id | 点赞
 				movies.POST("like/:id", service.HandlerNoBind(&service.LikeMovie{}))
 				// GET api/movie/like/:id | 看有没有点赞
-				movies.POST("like/:id", service.HandlerNoBind(&service.LikeMovieLeMe{}))
+				movies.GET("like/:id", service.HandlerNoBind(&service.LikeMovieLeMe{}))
 				// GET api/movie/author | 获取作者的电影
 				movies.GET("author", service.HandlerBindQuery(&service.GetMovieByAuthor{}))
 				// DELETE api/movie | 删除电影
