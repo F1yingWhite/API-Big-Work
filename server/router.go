@@ -14,14 +14,12 @@ func InitRouter() *gin.Engine {
 
 	// 一些基础配置
 	// CORS配置，允许所有来源的请求
-	config := cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Authorization"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}
+	// 一些基础配置
+	config := cors.DefaultConfig()
+	config.ExposeHeaders = []string{"Authorization"}
+	config.AllowCredentials = true
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 
 	// 让他能接收所有域的请求
 	r.Use(cors.New(config))
