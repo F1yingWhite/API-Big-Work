@@ -83,13 +83,59 @@ export const useGeneralStore = defineStore('general', {
       }
     },
 
-    // 获得所有的视频列表
-    async getAllUsersAndPosts() {
+    // 未登录，获得所有的视频列表
+    async getNoauthPosts() {
       // TODO:这里的接口要改
-      let res = await $axios.get('/api/movie/list')
-      this.$state.posts = res.data.data
+      try {
+        // TODO:后期调整下页数和每页数目
+        const page = 1; // 页码
+        const pageSize = 5; // 每页条数
+        const response = await $axios.get(`/api/movie/list`, {
+          params: {
+            page: page,
+            pageSize: pageSize
+          }
+        });
+        
+        if (response && response.data && response.data.data) {
+          const videos = response.data.data;
 
-      console.log("Posts1:" + posts)
+          this.$state.posts = videos.map(video => ({
+            ID: video.ID,
+            path: video.path,
+            title: video.title,
+            like: video.like,
+            author: video.author
+          }));
+        } else {
+          console.error('Unexpected response structure:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    },
+
+    // 登录，给用户推荐视频
+    async getAuthPosts() {
+      try {
+        const response = await $axios.get(`/api/movie/recommend`);
+        
+        if (response && response.data && response.data.data) {
+          const videos = response.data.data;
+
+          this.$state.posts = videos.map(video => ({
+            ID: video.ID,
+            path: video.path,
+            title: video.title,
+            like: video.like,
+            author: video.author
+          }));
+        } else {
+          console.error('Unexpected response structure:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
     }
   },
   persist: true,

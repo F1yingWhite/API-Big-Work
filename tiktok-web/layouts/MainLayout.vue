@@ -7,7 +7,7 @@
         <div>
             <SideNavMain />
         </div>
-
+        
         <slot/>
     </div>
 </template>

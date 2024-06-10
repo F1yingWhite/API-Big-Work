@@ -8,12 +8,13 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     id: '',
     name: '',
-    bio: '',
-    image: '',
     token: ''
   }),
+  getters: {
+    isAuthenticated: (state) => !!state.token
+  },
   actions: {
-
+    // 登录接口
     async login(id, password) {
       try {
         const response = await $axios.post('/api/user/login', {
@@ -128,51 +129,28 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async likePost(post, isPostPage) {
-      // TODO:接口
-      let res = await $axios.post('/api/likes', {
-        post_id: post.id,
-      })
-
-      console.log(res)
-
-      let singlePost = null
-
-      if (isPostPage) {
-        singlePost = post
-      } else {
-        singlePost = useGeneralStore().posts.find(p => p.id === post.id)
-      }
-      console.log(singlePost)
-      singlePost.likes.push(res.data.like)
-    },
-
-    async unlikePost(post, isPostPage) {
-      let deleteLike = null
-      let singlePost = null
-
-      if (isPostPage) {
-        singlePost = post
-      } else {
-        singlePost = useGeneralStore().posts.find(p => p.id === post.id)
-      }
-
-      singlePost.likes.forEach(like => {
-        if (like.user_id === this.id) { deleteLike = like }
-      });
-      
-      // TODO: 接口
-      let res = await $axios.delete('/api/likes/' + deleteLike.id)
-
-      for (let i = 0; i < singlePost.likes.length; i++) {
-        const like = singlePost.likes[i];
-        if (like.id === res.data.like.id) { singlePost.likes.splice(i, 1); }
+    // 确认用户是否对这个视频点赞
+    async likeOrNot(post) {
+      try {
+        let res = await $axios.get(`api/movie/like/${post.ID}`);
+        // return res.data.data.like === "true";
+        console.log("1:" + res.data.data.like)
+        return res.data.data.like === "true";
+      } catch (error) {
+        console.error(error);
       }
     },
 
-    // TODO:可能要加这个接口？登出后把token清掉
+    // 用户对视频点赞以及取消点赞
+    async like(post) {
+      try {
+        let res = await $axios.post(`api/movie/like/${post.ID}`);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     async logout() {
-      // await $axios.post('/api/logout')
       this.resetUser()
       localStorage.removeItem('token')
       delete $axios.defaults.headers.common['Authorization']
@@ -181,9 +159,6 @@ export const useUserStore = defineStore('user', {
     resetUser() {
       this.id = ''
       this.name = ''
-      this.email = ''
-      this.bio = ''
-      this.image = ''
       this.token = ''
     }
   },

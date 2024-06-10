@@ -1,7 +1,7 @@
 <template>
-    <div :id="`PostMain-${post.author}`" class="flex border-b py-6">
+    <div :id="`PostMain-${post.ID}`" class="flex border-b py-6">
         <div
-            @click = "$event => isLoggedIn(post.author)"
+            @click = "$event => isLoggedIn(route.params.id)"
             class="cursor-pointer"
         >
             <img class="rounded-full max-h-[60px]" width="60" src="https://picsum.photos/id/8/300/320">
@@ -9,7 +9,7 @@
 
         <div class="pl-3 w-full px-4">
             <div class="flex items-center justify-between ph-0.5">
-                <button>
+                <button @click="isLoggedIn(route.params.id)">
                     <span class="font-bold hover:underline cursor-pointer">
                         {{ post.author }}
                     </span>
@@ -44,12 +44,12 @@
                     class="relative min-h-[480px] max-h-[580px] max-w-[260px] flex items-center bg-black rounded-xl cursor-pointer"
                 >
                     <video
-                        v-if="`http://127.0.0.1:8888/api/movie/${post.path}`" 
+                        v-if="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`" 
                         ref="video"
                         loop
                         muted
                         class="rounded-xl object-cover mx-auto h-full" 
-                        :src="`http://127.0.0.1:8888/api/movie/${post.path}`" 
+                        :src="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`" 
                     />
 
                     <img 
@@ -63,17 +63,7 @@
                     <div class="absolute bottom-0 pl-2">
                         <div class="pb-4 text-center">
                             <button
-                                class="rounded-full bg-gray-200 p-2 cursor-pointer"
-                            >
-                                <Icon 
-                                    name="mdi:heart" 
-                                    size="25"
-                                />
-                            </button>
-
-                            <span class="text-xs text-gray-800 font-semibold">12</span>
-                            <!-- <button
-                                @click="isLiked ? unlikePost(post) : likePost(post)" 
+                                @click="toggleLike(post)" 
                                 class="rounded-full bg-gray-200 p-2 cursor-pointer"
                             >
                                 <Icon 
@@ -83,7 +73,7 @@
                                 />
                             </button>
 
-                            <span class="text-xs text-gray-800 font-semibold">{{ post.like }}</span> -->
+                            <span class="text-xs text-gray-800 font-semibold">{{ likeCount }}</span>
                         </div>
 
                         <div class="pb-4 text-center">
@@ -107,28 +97,38 @@
 </template>
 
 <script setup>
-const { $generalStore, $userStore } = useNuxtApp()
-const props = defineProps(['post'])
-const { post } = toRefs(props)
+const { $generalStore, $userStore } = useNuxtApp();
+const props = defineProps(['post']);
+const { post } = toRefs(props);
 
-const router = useRouter()
+const router = useRouter();
+const route = useRoute();
 
-let video = ref(null)
+let video = ref(null);
+let isLiked = ref(false);
+let likeCount = ref(post.value.like);
+
+console.log("likeCount:" + likeCount)
 
 onMounted(() => {
-    let observer = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) {
-            console.log('Element is playing' + post.ID);
-            video.value.play()
-        } else {
-            console.log('Element is paused' + post.ID);
-            video.value.pause()
-        }
+  let observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        console.log('Element is playing ' + post.ID);
+        entry.target.play();
+      } else {
+        console.log('Element is paused ' + post.ID);
+        entry.target.pause();
+      }
+    });
+  }, { threshold: [0.6] });
 
-    }, { threshold: [0.6] });
+  observer.observe(video.value);
 
-    observer.observe(document.getElementById(`PostMain-${post.ID}`));
-})
+  if (isLiked.value) {
+    likeCount.value++;
+  }
+});
 
 onBeforeUnmount(() => {
     video.value.pause()
@@ -136,44 +136,26 @@ onBeforeUnmount(() => {
     video.value.src = ''
 })
 
-const isLiked = computed(() => {
-    let res = post.value.likes.find(like => like.user_id === $userStore.id)
-    if (res) {
-        return true
-    }
-    return false
-})
-
-const likePost = async (post) => {
+const toggleLike = async (post) => {
     if (!$userStore.id) {
-        $generalStore.isLoginOpen = true
-        return
+        $generalStore.isLoginOpen = true;
+        return;
     }
     try {
-        await $userStore.likePost(post)
+        await $userStore.like(post);
+        isLiked.value = !isLiked.value;
+        likeCount.value += isLiked.value ? 1 : -1;
     } catch (error) {
-        console.log(error)
+        console.error(error);
     }
-}
+};
 
-const unlikePost = async (post) => {
-    if (!$userStore.id) {
+const isLoggedIn = (id) => {
+    if (id) {
         $generalStore.isLoginOpen = true
         return
     }
-    try {
-        await $userStore.unlikePost(post, false)
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-const isLoggedIn = (user) => {
-    if (!author) {
-        $generalStore.isLoginOpen = true
-        return
-    }
-    setTimeout(() => router.push(`/profile/${author}`), 200)
+    setTimeout(() => router.push(`/profile/${id}`), 200)
 }
 
 // TODO:这里的路由应该要改

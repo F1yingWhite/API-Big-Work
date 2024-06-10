@@ -31,8 +31,11 @@ export const useProfileStore = defineStore('profile', {
           const videos = response.data.data;
 
           this.$state.posts = videos.map(video => ({
+            ID: video.ID,
+            id: id,
             path: video.path,
             title: video.title,
+            author: video.author,
             like: video.like
           }));
 
