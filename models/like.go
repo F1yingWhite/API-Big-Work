@@ -1,7 +1,10 @@
 package models
 
+import "gorm.io/gorm"
+
 // 记录用户点赞记录，已经点赞过的不能再点赞
 type Like struct {
+	gorm.Model
 	ID      int    `json:"id" gorm:"primaryKey"`
 	MovieID uint   `json:"movie_id"`
 	UserID  string `json:"user_id"`
@@ -16,7 +19,15 @@ func LikeMovie(id uint, userID string) error {
 			MovieID: id,
 			UserID:  userID,
 		}
-		return DB.Create(&like).Error
+		if err := DB.Create(&like).Error; err != nil {
+			return err
+		}
+		//点赞数加一
+		return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
 	}
-	return DB.Delete(&like).Error
+	if err := DB.Delete(&like).Error; err != nil {
+		return err
+	}
+	//点赞数减一
+	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like - ?", 1)).Error
 }
