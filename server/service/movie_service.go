@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/url"
 	"path"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -71,8 +72,12 @@ type LikeMovie struct {
 func (s *LikeMovie) Handle(c *gin.Context) (any, error) {
 	id := c.GetString("id")
 	//转为uint
-	movie_id := c.GetUint("movie_id")
-	err := models.LikeMovie(movie_id, id)
+	movie_id := c.Param("id")
+	movieID, err := strconv.ParseUint(movie_id, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	err = models.LikeMovie(uint(movieID), id)
 	if err != nil {
 		return nil, err
 	}

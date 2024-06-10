@@ -10,7 +10,7 @@ type Movie struct {
 	gorm.Model
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Like   uint   `json:"like" gorm:"default:0;index"`
+	Likes  uint   `json:"like" gorm:"default:0;index"`
 	Path   string `json:"path"`
 }
 
@@ -18,7 +18,7 @@ func CreateMovie(title string, author string, path string) error {
 	movie := Movie{
 		Title:  title,
 		Author: author,
-		Like:   0,
+		Likes:  0,
 		Path:   url.PathEscape(path),
 	}
 	return DB.Create(&movie).Error
@@ -29,7 +29,7 @@ func CreateMovieWithLike(title string, author string, path string, like uint) er
 	movie := Movie{
 		Title:  title,
 		Author: author,
-		Like:   like,
+		Likes:  like,
 		Path:   url.PathEscape(path),
 	}
 	return DB.Create(&movie).Error
