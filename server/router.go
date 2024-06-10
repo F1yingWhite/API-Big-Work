@@ -41,7 +41,7 @@ func InitRouter() *gin.Engine {
 			user.PUT("password", service.HandlerBind(&service.UpdatePassword{}))
 
 		}
-		movie:=api.Group("movie")
+		movie := api.Group("movie")
 		{
 			// GET api/movie/list | 获取电影列表
 			movie.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
@@ -64,7 +64,6 @@ func InitRouter() *gin.Engine {
 			{
 				// GET api/movie | 获取指定id的电影
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
-
 				// GET api/movie/moviepath | 看电影
 				movies.GET("/movies/:name", service.DowFile)
 				// GET api/movie/like | 点赞

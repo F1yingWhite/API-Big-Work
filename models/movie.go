@@ -65,10 +65,6 @@ func GetMovieByPath(path string) (Movie, error) {
 	return movie, err
 }
 
-func LikeMovie(id uint) error {
-	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
-}
-
 // 推荐电影 每次推荐一个，推荐like最高的，如果like相同，推荐最新的，用户已经看过的不推荐
 func RecommendMovie(userID string) (Movie, error) {
 	var movie Movie

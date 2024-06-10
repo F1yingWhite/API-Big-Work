@@ -57,7 +57,8 @@ type LikeMovie struct {
 }
 
 func (s *LikeMovie) Handle(c *gin.Context) (any, error) {
-	err := models.LikeMovie(s.ID)
+	id := c.GetString("id")
+	err := models.LikeMovie(s.ID, id)
 	if err != nil {
 		return nil, err
 	}
