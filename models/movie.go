@@ -70,7 +70,7 @@ func RecommendMovie(userID string) ([]Movie, error) {
 	var movies []Movie
 	err := DB.Joins("LEFT JOIN histories ON movies.id = histories.movie_id AND histories.user_id = ?", userID).
 		Where("histories.movie_id IS NULL").
-		Order("movies.like DESC, movies.created_at DESC").
+		Order("movies.likes DESC, movies.created_at DESC").
 		Limit(5).
 		Find(&movies).Error
 	return movies, err
