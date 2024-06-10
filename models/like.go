@@ -23,11 +23,11 @@ func LikeMovie(id uint, userID string) error {
 			return err
 		}
 		//点赞数加一
-		return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like + ?", 1)).Error
+		return DB.Model(&Movie{}).Where("id = ?", id).Update("`like`", gorm.Expr("`like` + ?", 1)).Error
 	}
 	if err := DB.Delete(&like).Error; err != nil {
 		return err
 	}
 	//点赞数减一
-	return DB.Model(&Movie{}).Where("id = ?", id).Update("like", gorm.Expr("like - ?", 1)).Error
+	return DB.Model(&Movie{}).Where("id = ?", id).Update("`like`", gorm.Expr("`like` - ?", 1)).Error
 }
