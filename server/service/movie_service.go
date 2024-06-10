@@ -66,12 +66,13 @@ func DowFileWithOutAuth(c *gin.Context) {
 }
 
 type LikeMovie struct {
-	ID uint `form:"id" binding:"required"`
 }
 
 func (s *LikeMovie) Handle(c *gin.Context) (any, error) {
 	id := c.GetString("id")
-	err := models.LikeMovie(s.ID, id)
+	//转为uint
+	movie_id := c.GetUint("movie_id")
+	err := models.LikeMovie(movie_id, id)
 	if err != nil {
 		return nil, err
 	}
