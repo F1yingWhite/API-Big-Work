@@ -16,8 +16,9 @@ export const useProfileStore = defineStore('profile', {
     async getProfile(id) {
       this.resetUser()
       try {
+        // TODO:后期调整下页数和每页数目
         const page = 1; // 页码
-        const pageSize = 10; // 每页条数
+        const pageSize = 100; // 每页条数
 
         const response = await $axios.get(`/api/movie/author`, {
           params: {
@@ -37,10 +38,6 @@ export const useProfileStore = defineStore('profile', {
 
           this.$state.id = id;
           this.$state.name = videos[0].author;
-
-          console.log(this.$state.posts);
-          console.log(this.$state.allLikes);
-          // console.log(`http://127.0.0.1:8888/api/movie/${this.$state.posts[0].path}`);
 
           this.allLikesCount();
         } else {

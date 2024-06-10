@@ -1,7 +1,7 @@
 <template>
     <MainLayout>
       <div 
-        v-if="$profileStore.username"
+        v-if="$profileStore.name"
         class="pt-[90px] 2xl:pl-[185px] lg:pl-[160px] lg:pr-0 pr-2 w-[calc(100%-90px)] max-w-[1800px] 2xl:mx-auto"
       >
         <div class="flex w-[calc(100vw-230px)]">
@@ -11,9 +11,9 @@
           >
           <div class="ml-5 w-full">
             <div class="text-[30px] font-bold truncate">
-              {{ $generalStore.allLowerCaseNoCaps($profileStore.username) }}
+              {{ $generalStore.allLowerCaseNoCaps($profileStore.name) }}
             </div>
-            <div class="text-[18px] truncate">{{ $profileStore.username }}</div>
+            <div class="text-[18px] truncate">{{ $profileStore.name }}</div>
             <button
               v-if="$profileStore.id === $userStore.id"
               @click="$event => $generalStore.isEditProfileOpen = true"
@@ -58,14 +58,8 @@
           </div>
         </div>
   
-        <div>
-          <!-- Debugging output -->
-          <pre>show: {{ show }}</pre>
-          <pre>posts: {{ posts }}</pre>
-        </div>
-  
         <div class="mt-4 grid 2xl:grid-cols-6 xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-3">
-          <div v-if="show" v-for="post in posts" :key="post.ID">
+          <div v-if="show" v-for="post in $profileStore.posts" :key="post.ID">
             <PostUser :post="post" />
           </div>
         </div>
@@ -88,6 +82,8 @@
     try {
       await $profileStore.getProfile(route.params.id)
       console.log('Profile loaded:', $profileStore)
+      console.log('Posts:', $profileStore.posts)
+      console.log('Name:', $profileStore.name)
     } catch (error) {
       console.log(error)
     }
@@ -95,10 +91,8 @@
   
   watch(() => posts.value, () => {
     console.log('Posts updated:', posts.value)
-    console.log('Posts updated:', posts[0])
     setTimeout(() => {
-    show.value = true
-    console.log('Show is set to true')
+      show.value = true
     }, 300)
   })
 </script>

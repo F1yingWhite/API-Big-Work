@@ -78,4 +78,5 @@ const isHover = (bool) => {
         video.value.pause()
     }
 }
+
 </script>
