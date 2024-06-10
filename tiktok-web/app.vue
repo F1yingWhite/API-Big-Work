@@ -11,7 +11,7 @@ const { $userStore, $generalStore } = useNuxtApp()
 const { isLoginOpen, isEditProfileOpen } = storeToRefs($generalStore)
 
 onMounted(async () => {
-  $generalStore.bodySwitch(false) 
+  $generalStore.bodySwitch(false)
   isLoginOpen.value = false
   isEditProfileOpen.value = false
 

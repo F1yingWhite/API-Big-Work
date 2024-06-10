@@ -58,6 +58,16 @@
 </template>
 
 <script setup>
+const { $generalStore, $userStore } = useNuxtApp()
 const route = useRoute()
-// import MenuItem  from "MenuItem.vue"
+const router = useRouter()
+
+const isLoggedIn = (fol) => {
+    if (!$userStore.id) {
+        $generalStore.isLoginOpen = true
+        return
+    }
+    // setTimeout(() => router.push(`/profile/${fol.id}`), 200)
+    setTimeout(() => router.push(`/profile/test`), 200)
+}
 </script>

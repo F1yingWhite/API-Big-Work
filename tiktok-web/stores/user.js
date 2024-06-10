@@ -67,11 +67,17 @@ export const useUserStore = defineStore('user', {
       return await $axios.post('/api/user/update-user-image', data)
     },
 
-    async updateUser(name, bio) {
+    async updateUser(name) {
       // TODO:接口
-      return await $axios.put('/api/user', {
+      return await $axios.put('/api/user/username', {
         name: name,
-        // bio: bio
+      })
+    },
+
+    async updateUserPassword(password) {
+      // TODO:接口
+      return await $axios.put('/api/user/password', {
+        password: password,
       })
     },
 

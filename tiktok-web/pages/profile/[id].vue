@@ -81,9 +81,6 @@
   onMounted(async () => {
     try {
       await $profileStore.getProfile(route.params.id)
-      console.log('Profile loaded:', $profileStore)
-      console.log('Posts:', $profileStore.posts)
-      console.log('Name:', $profileStore.name)
     } catch (error) {
       console.log(error)
     }
