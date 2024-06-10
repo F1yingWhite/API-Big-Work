@@ -45,6 +45,8 @@ func InitRouter() *gin.Engine {
 		{
 			// GET api/movie/list | 获取电影列表
 			movie.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
+			// GET api/movie/moviepath | 看电影
+			movie.GET("/movies/noauth/:name", service.DowFileWithOutAuth)
 		}
 		//需要jwt验证的接口
 		auth := api.Group("")

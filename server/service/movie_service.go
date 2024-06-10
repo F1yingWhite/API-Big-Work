@@ -38,7 +38,6 @@ func (s *GetMovieList) Handle(c *gin.Context) (any, error) {
 func DowFile(c *gin.Context) {
 	id, _ := c.Get("id")
 	name := c.Param("name")
-	//创建历史 movies%2F352b9997-c1de-49d0-a546-8ad69cd8253b.mp4
 	movie, err := models.GetMovieByPath(url.PathEscape("movies/" + name))
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -47,6 +46,20 @@ func DowFile(c *gin.Context) {
 		return
 	}
 	models.CreateHistory(movie.ID, id.(string))
+	filename := path.Join("./movies", name)
+	//响应一个文件
+	c.File(filename)
+}
+
+func DowFileWithOutAuth(c *gin.Context) {
+	name := c.Param("name")
+	_, err := models.GetMovieByPath(url.PathEscape("movies/" + name))
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "文件不存在",
+		})
+		return
+	}
 	filename := path.Join("./movies", name)
 	//响应一个文件
 	c.File(filename)
