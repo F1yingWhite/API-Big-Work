@@ -68,8 +68,8 @@ func InitRouter() *gin.Engine {
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
 				// GET api/movie/moviepath | 看电影
 				movies.GET("/movies/:name", service.DowFile)
-				// GET api/movie/like | 点赞
-				movies.GET("like", service.HandlerBind(&service.LikeMovie{}))
+				// GET api/movie/like/:id | 点赞
+				movies.GET("like/:id", service.HandlerBindQuery(&service.LikeMovie{}))
 				// GET api/movie/author | 获取作者的电影
 				movies.GET("author", service.HandlerBindQuery(&service.GetMovieByAuthor{}))
 				// DELETE api/movie | 删除电影
