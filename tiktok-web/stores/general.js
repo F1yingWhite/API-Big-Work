@@ -11,7 +11,7 @@ export const useGeneralStore = defineStore('general', {
     selectedPost: null,
     ids: null,
     isBackUrl: "/",
-    posts: null,
+    posts: [],
     suggested: null,
     following: null,
   }),
@@ -83,10 +83,13 @@ export const useGeneralStore = defineStore('general', {
       }
     },
 
+    // 获得所有的视频列表
     async getAllUsersAndPosts() {
       // TODO:这里的接口要改
-      let res = await $axios.get('/api/home')
-      this.posts = res.data
+      let res = await $axios.get('/api/movie/list')
+      this.$state.posts = res.data.data
+
+      console.log("Posts1:" + posts)
     }
   },
   persist: true,

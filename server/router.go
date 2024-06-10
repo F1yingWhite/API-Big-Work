@@ -37,6 +37,11 @@ func InitRouter() *gin.Engine {
 			user.PUT("password", service.HandlerBind(&service.UpdatePassword{}))
 
 		}
+		movie:=api.Group("movie")
+		{
+			// GET api/movie/list | 获取电影列表
+			movie.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
+		}
 		//需要jwt验证的接口
 		auth := api.Group("")
 		auth.Use(middlewares.TokenAuthorization())
@@ -55,8 +60,7 @@ func InitRouter() *gin.Engine {
 			{
 				// GET api/movie | 获取指定id的电影
 				movies.GET("", service.HandlerBindQuery(&service.GetMovie{}))
-				// GET api/movie/list | 获取电影列表
-				movies.GET("list", service.HandlerBindQuery(&service.GetMovieList{}))
+
 				// GET api/movie/moviepath | 看电影
 				movies.GET("/movies/:name", service.DowFile)
 				// GET api/movie/like | 点赞
