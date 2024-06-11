@@ -12,8 +12,6 @@ export const useGeneralStore = defineStore('general', {
     ids: null,
     isBackUrl: "/",
     posts: [],
-    suggested: null,
-    following: null,
   }),
   actions: {
     bodySwitch(val) {
@@ -53,33 +51,22 @@ export const useGeneralStore = defineStore('general', {
       });
     },
 
-    async getPostById(id) {
-      // TODO:这里的接口要改
-      let res = await $axios.get(`/api/posts/${id}`)
+    async getPostById(ID) {
+      try {
+        const response = await $axios.get(`/api/movie`, {
+          params: {
+            id: ID
+          }
+        });;
 
-      this.$state.selectedPost = res.data.post[0]
-      this.$state.ids = res.data.ids
-    },
-
-    async getRandomUsers(type) {
-      // TODO:这里的接口要改
-      let res = await $axios.get(`/api/get-random-users`)
-
-      if (type === 'suggested') {
-        this.suggested = res.data.suggested
-      }
-
-      if (type === 'following') {
-        this.following = res.data.following
-      }
-    },
-
-    updateSideMenuImage(array, user) {
-      for (let i = 0; i < array.length; i++) {
-        const res = array[i];
-        if (res.id == user.id) {
-            res.image = user.image
+        if (response && response.data && response.data.data) {
+          this.$state.selectedPost = response.data.data;
+          console.log(this.$state.selectedPost)
+        } else {
+          console.error('Unexpected response structure:', response);
         }
+      } catch (error) {
+        console.error('Error fetching post:', error);
       }
     },
 

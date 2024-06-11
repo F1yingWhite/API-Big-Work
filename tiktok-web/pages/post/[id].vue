@@ -3,14 +3,15 @@
         id="PostPage"
         class="fixed lg:flex justify-between z-50 top-0 left-0 w-full h-full bg-black lg:overflow-hidden overflow-auto"
     >
-        <div class="lg:w-[calc(100%-540px)] h-full relative">
+        <div v-if="$generalStore.selectedPost" class="lg:w-[calc(100%-540px)] h-full relative">
             <NuxtLink
+                :href="$generalStore.isBackUrl"
                 class="absolute z-20 m-5 rounded-full bg-gray-700 p-1.5 hover:bg-gray-800"
             >
                 <Icon name="material-symbols:close" color="#FFFFFF" size="27"/>
             </NuxtLink>
 
-            <div v-if="true">
+            <div v-if="($generalStore.posts.length > 1)">
                 <button
                 :disabled="!isLoaded"
                 @click="$event => loopThroughPostsUp()"
@@ -35,9 +36,9 @@
             >
 
             <video 
-                v-if="true"
-                class="absolute object-cover w-full my-auto z-[-1] h-screen"
-                src="../../movies/sky.mp4"
+                v-if="$generalStore.selectedPost.path"
+                class="absolute object-cover w-full my-auto z-[-1] h-screen" 
+                :src="`http://127.0.0.1:8888/api/movie/noauth/${$generalStore.selectedPost.path}`" 
             />
 
             <div
@@ -49,26 +50,26 @@
 
             <div class="bg-black bg-opacity-70 xlg:min-w-[480px]">
                 <video
-                    v-if="true"
+                    v-if="$generalStore.selectedPost.path"
                     ref="video"
                     loop
                     muted
-                    class="h-screen mx-auto"
-                    src="../../movies/sky.mp4"
+                    class="h-screen mx-auto" 
+                    :src="`http://127.0.0.1:8888/api/movie/noauth/${$generalStore.selectedPost.path}`" 
                 />
             </div>
         </div>
 
         <div
             id="InfoSection"
-            v-if="true"
+            v-if="$generalStore.selectedPost" 
             class="lg:max-w-[550px] relative w-full h-full bg-white"
         >
             <div class="py-7" />
 
             <div class="flex items-center justify-between px-8">
                 <div class="flex items-center">
-                    <NuxtLink href="/">
+                    <NuxtLink :href="`/profile/${$generalStore.selectedPost.author}`">
                         <img
                             class="rounded-full lg:mx-0 mx-auto"
                             width="40" 
@@ -77,15 +78,18 @@
                     </NuxtLink>
                     <div class="ml-3 pt-0.5">
                         <div class="text-[17px] font-semibold">
-                            用户名
-                            <span class="relative -top-[2px] text-[30px] pr-0.5">.</span>
-                            <span class="font-medium">日期</span>
+                            {{ $generalStore.allLowerCaseNoCaps($generalStore.selectedPost.author) }}
+                        </div>
+                        <div class="text-[13px] -mt-5 font-light">
+                            {{ $generalStore.selectedPost.author }}
+                            <span class="relative -top-[2px] text-[30px] pr-0.5 ">.</span>
+                            <span class="font-medium">{{ $generalStore.selectedPost.CreatedAt }}</span>
                         </div>
                     </div>
                 </div>
 
                 <Icon
-                    v-if="true"
+                    v-if="$userStore.id === $generalStore.selectedPost.author"
                     @click="$event => deletePost()"
                     class="cursor-pointer"
                     name="material-symbols:delete-outline-sharp"
@@ -93,23 +97,27 @@
                 />
             </div>
 
-            <div class="px-8 mt-4 text-sm">这是一个post文本</div>
+            <div class="px-8 mt-4 text-sm">some post text</div>
 
             <div class="px-8 mt-4 text-sm font-bold">
                 <Icon name="mdi:music" size="17"/>
-                original sound - 用户名
+                original sound - {{ $generalStore.allLowerCaseNoCaps($generalStore.selectedPost.author) }}
             </div>
 
             <div class="flex items-center px-8 mt-8">
                 <div class="pb-4 text-center flex items-center">
-                    <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
+                    <button 
+                        @click="toggleLike($generalStore.selectedPost)" 
+                        class="rounded-full bg-gray-200 p-2 cursor-pointer"
+                    >
                         <Icon
                             name="mdi:heart"
                             size="25"
+                            :color="isLiked ? '#F02C56' : ''"
                         />
                     </button>
                     <span class="text-xs pl-2 pr-4 text-gray-800 font-semibold">
-                        123
+                        {{ likeCount }}
                     </span>
                 </div>
 
@@ -179,7 +187,7 @@
 
             <div
                 id="CreateComment"
-                v-if="true"
+                v-if="$userStore.id"
                 class="absolute flex items-center justify-between bottom-0 bg-white h-[85px] lg:max-w-[550px] w-full py-5 px-8 border-t-2"
             >
                 <div
@@ -209,6 +217,8 @@
 </template>
 
 <script setup>
+const { $generalStore, $userStore, $profileStore } = useNuxtApp()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -216,18 +226,48 @@ let video = ref(null)
 let isLoaded = ref(false)
 let comment = ref(null)
 let inputFocused = ref(false)
+let isLiked = ref(false);
+let likeCount = ref(0);
 
-onMounted(() => {
-    isLoaded.value = true 
-    video.value.play()
-    // video.value.addEventListener('loadeddata',(e) => {
-    //     if (e.target) {
-    //         setTimeout(() => {
-    //             isLoaded.value = true
-    //         }, 500)
-    //     }
-    // })
+onMounted(async () => {
+    $generalStore.selectedPost = null
+    try {
+        await $generalStore.getPostById(route.params.id)
+        console.log($generalStore.selectedPost)
+        likeCount.value = $generalStore.selectedPost.like;
+    } catch (error) {
+        if (error && error.response.status === 400) {
+            router.push('/')
+        }
+    }
+
+    video.value.addEventListener('loadeddata', (e) => {
+        if (e.target) {
+            setTimeout(() => {
+                isLoaded.value = true
+            }, 500)
+        }
+    });
+
+  if (isLiked.value) {
+    likeCount.value++;
+  }
 })
+
+
+const toggleLike = async (post) => {
+    if (!$userStore.id) {
+        $generalStore.isLoginOpen = true;
+        return;
+    }
+    try {
+        await $userStore.like(post);
+        isLiked.value = !isLiked.value;
+        likeCount.value += isLiked.value ? 1 : -1;
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 onBeforeUnmount(() => {
     video.value.pause()

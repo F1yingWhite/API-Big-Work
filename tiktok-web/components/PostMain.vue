@@ -108,8 +108,6 @@ let video = ref(null);
 let isLiked = ref(false);
 let likeCount = ref(post.value.like);
 
-console.log("likeCount:" + likeCount)
-
 onMounted(() => {
   let observer = new IntersectionObserver(function(entries) {
     entries.forEach(entry => {
@@ -167,6 +165,6 @@ const displayPost = (post) => {
 
     $generalStore.setBackUrl('/')
     $generalStore.selectedPost = null
-    setTimeout(() => router.push(`/post/${post.id}`), 200)
+    setTimeout(() => router.push(`/post/${post.ID}`), 200)
 }
 </script>

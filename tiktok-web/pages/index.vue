@@ -14,16 +14,6 @@ const { $generalStore,$userStore } = useNuxtApp()
 import { storeToRefs } from 'pinia';
 const { posts } = storeToRefs($generalStore)
 
-// onMounted(async () => {
-//     try {
-//         // 获取所有的视频和用户
-//         await $generalStore.getNoauthPosts()
-//         console.log('Posts updated:', posts)
-//     } catch (error) {
-//         console.log(error)
-//     }
-// })
-
 onMounted(async () => {
   try {
     if ($userStore.isAuthenticated) {
