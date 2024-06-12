@@ -50,12 +50,11 @@
 
             <div class="bg-black bg-opacity-70 xlg:min-w-[480px]">
                 <video
-                    v-if="$generalStore.selectedPost.path"
-                    ref="video"
-                    loop
-                    muted
-                    class="h-screen mx-auto" 
-                    :src="`http://127.0.0.1:8888/api/movie/noauth/${$generalStore.selectedPost.path}`" 
+                v-if="$generalStore.selectedPost.path"
+                ref="video"
+                loop
+                muted
+                class="h-screen mx-auto"
                 />
             </div>
         </div>
@@ -233,26 +232,31 @@ onMounted(async () => {
     $generalStore.selectedPost = null
     try {
         await $generalStore.getPostById(route.params.id)
-        console.log($generalStore.selectedPost)
         likeCount.value = $generalStore.selectedPost.like;
+
+        const videoPath = $generalStore.selectedPost.path;
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://127.0.0.1:8888/api/movie/${videoPath}`, {
+            headers: {
+                'Authorization': token
+            }
+        });
+        const videoBlob = await response.blob();
+        video.value.src = URL.createObjectURL(videoBlob);
+
+        video.value.addEventListener('loadeddata', () => {
+            setTimeout(() => {
+                isLoaded.value = true;
+            }, 500);
+        });
     } catch (error) {
-        if (error && error.response.status === 400) {
-            router.push('/')
+        if (error && error.response && error.response.status === 400) {
+            router.push('/');
         }
     }
+});
 
-    video.value.addEventListener('loadeddata', (e) => {
-        if (e.target) {
-            setTimeout(() => {
-                isLoaded.value = true
-            }, 500)
-        }
-    });
 
-  if (isLiked.value) {
-    likeCount.value++;
-  }
-})
 
 // const loopThroughPostsUp = async () => {
 //     if (!isLoaded.value) return;
@@ -339,11 +343,14 @@ const toggleLike = async (post) => {
     }
 };
 
+
 onBeforeUnmount(() => {
-    video.value.pause()
-    video.value.currentTime = 0
-    video.value.src = ''
-})
+    if (video.value) {
+        video.value.pause();
+        video.value.currentTime = 0;
+        video.value.src = '';
+    }
+});
 
 watch(() => isLoaded.value, () =>{
     if (isLoaded.value) {
