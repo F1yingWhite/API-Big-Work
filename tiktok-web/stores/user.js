@@ -59,8 +59,8 @@ export const useUserStore = defineStore('user', {
       // TODO:接口
       let res = await $axios.get('/api/user')
 
-      this.$state.id = res.data.id
-      this.$state.name = res.data.username
+      this.$state.id = res.data.data.id
+      this.$state.name = res.data.data.username
     },
 
     async updateUserImage(data) {

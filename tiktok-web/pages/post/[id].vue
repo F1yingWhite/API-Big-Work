@@ -256,47 +256,6 @@ onMounted(async () => {
     }
 });
 
-
-
-// const loopThroughPostsUp = async () => {
-//     if (!isLoaded.value) return;
-//     isLoaded.value = false;
-//     try {
-//         let previousVideo = await $generalStore.fetchPreviousVideo($generalStore.selectedPost.id);
-//         while (previousVideo) {
-//             await router.push(`/post/${previousVideo.ID}`);
-//             console.log(previousVideo);
-//             isLoaded.value = true;
-//             return; // If we find a valid video, exit the loop and function
-//         }
-//         isLoaded.value = true;
-//     } catch (error) {
-//         console.error('Error fetching previous video:', error);
-//     } finally {
-//         isLoaded.value = true;
-//     }
-// };
-
-// const loopThroughPostsDown = async () => {
-//     if (!isLoaded.value) return;
-//     isLoaded.value = false;
-//     try {
-//         let nextVideo = await $generalStore.fetchNextVideo($generalStore.selectedPost.id);
-//         console.log($$generalStore.selectedPost.id)
-//         while (nextVideo) {
-//             await router.push(`/post/${nextVideo.ID}`);
-//             console.log(nextVideo);
-//             isLoaded.value = true;
-//             return; // If we find a valid video, exit the loop and function
-//         }
-//         isLoaded.value = true;
-//     } catch (error) {
-//         console.error('Error fetching next video:', error);
-//     } finally {
-//         isLoaded.value = true;
-//     }
-// };
-
 const loopThroughPostsUp = async () => {
     try {
         if (!isLoaded.value) return;
