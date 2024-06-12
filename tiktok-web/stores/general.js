@@ -131,7 +131,7 @@ export const useGeneralStore = defineStore('general', {
             const response = await $axios.post('/api/movie/down', {
                 movieId: parseInt(currentId)
             });
-            return response.data; // 假设API返回视频信息
+            return response.data.data;
         } catch (error) {
             console.error('Error fetching next video:', error);
         }
@@ -143,7 +143,7 @@ export const useGeneralStore = defineStore('general', {
             const response = await $axios.post('/api/movie/up', {
                 movieId: parseInt(currentId)
             });
-            return response.data; // 假设API返回视频信息
+            return response.data.data;
         } catch (error) {
             console.error('Error fetching previous video:', error);
         }

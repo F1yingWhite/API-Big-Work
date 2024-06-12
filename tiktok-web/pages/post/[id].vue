@@ -14,7 +14,7 @@
             <div v-if=true>
                 <button
                     :disabled="!isLoaded"
-                    @click="loopThroughPostsUp() "
+                    @click="loopThroughPostsUp()"
                     class="absolute z-20 right-4 top-4 flex items-center justify-center rounded-full bg-gray-700 px-1.5 hover:bg-gray-800"
                 >
                     <Icon name="mdi:chevron-up" size="30" color="#FFFFFF" />
@@ -22,7 +22,7 @@
 
                 <button
                     :disabled="!isLoaded"
-                    @click="loopThroughPostsDown() "
+                    @click="loopThroughPostsDown()"
                     class="absolute z-20 right-4 top-20 flex items-center justify-center rounded-full bg-gray-700 px-1.5 hover:bg-gray-800"
                 >
                     <Icon name="mdi:chevron-down" size="30" color="#FFFFFF" />
@@ -254,13 +254,53 @@ onMounted(async () => {
   }
 })
 
+// const loopThroughPostsUp = async () => {
+//     if (!isLoaded.value) return;
+//     isLoaded.value = false;
+//     try {
+//         let previousVideo = await $generalStore.fetchPreviousVideo($generalStore.selectedPost.id);
+//         while (previousVideo) {
+//             await router.push(`/post/${previousVideo.ID}`);
+//             console.log(previousVideo);
+//             isLoaded.value = true;
+//             return; // If we find a valid video, exit the loop and function
+//         }
+//         isLoaded.value = true;
+//     } catch (error) {
+//         console.error('Error fetching previous video:', error);
+//     } finally {
+//         isLoaded.value = true;
+//     }
+// };
+
+// const loopThroughPostsDown = async () => {
+//     if (!isLoaded.value) return;
+//     isLoaded.value = false;
+//     try {
+//         let nextVideo = await $generalStore.fetchNextVideo($generalStore.selectedPost.id);
+//         console.log($$generalStore.selectedPost.id)
+//         while (nextVideo) {
+//             await router.push(`/post/${nextVideo.ID}`);
+//             console.log(nextVideo);
+//             isLoaded.value = true;
+//             return; // If we find a valid video, exit the loop and function
+//         }
+//         isLoaded.value = true;
+//     } catch (error) {
+//         console.error('Error fetching next video:', error);
+//     } finally {
+//         isLoaded.value = true;
+//     }
+// };
+
 const loopThroughPostsUp = async () => {
     try {
         if (!isLoaded.value) return;
         isLoaded.value = false;
-        const nextVideo = await $generalStore.fetchNextVideo($generalStore.selectedPost.id);
-        if (nextVideo) {
-            await router.push(`/post/${nextVideo.id}`);
+        const previousVideo = await $generalStore.fetchPreviousVideo(route.params.id);
+        if (previousVideo) {
+            await router.push(`/post/${previousVideo.ID}`);
+            console.log(previousVideo)
         }
     } catch (error) {
         console.error('Error fetching next video:', error);
@@ -273,9 +313,10 @@ const loopThroughPostsDown = async () => {
     try {
         if (!isLoaded.value) return;
         isLoaded.value = false;
-        const previousVideo = await $generalStore.fetchPreviousVideo($generalStore.selectedPost.id);
-        if (previousVideo) {
-            await router.push(`/post/${previousVideo.id}`);
+        const nextVideo = await $generalStore.fetchNextVideo(route.params.id);
+        if (nextVideo) {
+            await router.push(`/post/${nextVideo.ID}`);
+            console.log(nextVideo)
         }
     } catch (error) {
         console.error('Error fetching previous video:', error);
@@ -283,25 +324,6 @@ const loopThroughPostsDown = async () => {
         isLoaded.value = true;
     }
 };
-// const loopThroughPostsDown = async () => {
-//       isLoaded.value = false;
-//       const nextVideo = await $generalStore.fetchNextVideo(route.params.id);
-//       if (nextVideo && nextVideo.ID) {
-//         setTimeout(() => router.push(`/post/${nextVideo.ID}`), 200)
-//         // this.$router.push(`/post/${nextVideo.ID}`);
-//       }
-//       isLoaded.value = true;
-// }
-
-// const loopThroughPostsUp = async () => {
-//       isLoaded.value = false;
-//       const previousVideo = await $generalStore.fetchPreviousVideo(route.params.id);
-//       if (previousVideo && previousVideo.ID) {
-//         setTimeout(() => router.push(`/post/${previousVideo.ID}`), 200)
-//         // this.$router.push(`/post/${previousVideo.ID}`);
-//       }
-//       isLoaded.value = true;
-// }
 
 const toggleLike = async (post) => {
     if (!$userStore.id) {
