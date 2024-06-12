@@ -174,12 +174,12 @@ func (s *RecommendMovie) Handle(c *gin.Context) (any, error) {
 }
 
 type UpMovie struct {
-	MoveId int `form:"moveId" binding:"required"`
+	MovieId int `form:"movieId" binding:"required"`
 }
 
 func (s *UpMovie) Handle(c *gin.Context) (any, error) {
 	// 找id比当前id小的最大的id
-	movie, err := models.UpMovie(uint(s.MoveId))
+	movie, err := models.UpMovie(uint(s.MovieId))
 	if err != nil {
 		return nil, err
 	}
@@ -187,12 +187,12 @@ func (s *UpMovie) Handle(c *gin.Context) (any, error) {
 }
 
 type DownMovie struct {
-	MoveId int `form:"moveId" binding:"required"`
+	MovieId int `form:"movieId" binding:"required"`
 }
 
 func (s *DownMovie) Handle(c *gin.Context) (any, error) {
 	// 找id比当前id大的最小的id
-	movie, err := models.DownMovie(uint(s.MoveId))
+	movie, err := models.DownMovie(uint(s.MovieId))
 	if err != nil {
 		return nil, err
 	}

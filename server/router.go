@@ -78,7 +78,7 @@ func InitRouter() *gin.Engine {
 				movies.POST("", service.HandlerBind(&service.UploadMovie{}))
 				// GET api/movie/recommend | 推荐电影
 				movies.GET("recommend", service.HandlerNoBind(&service.RecommendMovie{}))
-				// POST api/move/up | 查看上一个电影
+				// POST api/movie/up | 查看上一个电影
 				movies.POST("up", service.HandlerBind(&service.UpMovie{}))
 				// POST api/movie/down | 查找下一个电影
 				movies.POST("down", service.HandlerBind(&service.DownMovie{}))

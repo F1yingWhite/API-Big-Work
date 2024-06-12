@@ -18,7 +18,7 @@ onMounted(async () => {
   isLoginOpen.value = false
   isEditProfileOpen.value = false
 
-    // 从localStorage中恢复token并设置axios的Authorization头
+  // 从localStorage中恢复token并设置axios的Authorization头
   const token = localStorage.getItem('token')
   if (token) {
       $userStore.token = token

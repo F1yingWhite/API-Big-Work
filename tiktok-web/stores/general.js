@@ -123,6 +123,30 @@ export const useGeneralStore = defineStore('general', {
       } catch (error) {
         console.error('Error fetching profile:', error);
       }
+    },
+
+    // 获取下一个视频
+    async fetchNextVideo (currentId) {
+        try {
+            const response = await $axios.post('/api/movie/down', {
+                movieId: parseInt(currentId)
+            });
+            return response.data; // 假设API返回视频信息
+        } catch (error) {
+            console.error('Error fetching next video:', error);
+        }
+    },
+  
+    // 获取上一个视频
+    async fetchPreviousVideo (currentId) {
+        try {
+            const response = await $axios.post('/api/movie/up', {
+                movieId: parseInt(currentId)
+            });
+            return response.data; // 假设API返回视频信息
+        } catch (error) {
+            console.error('Error fetching previous video:', error);
+        }
     }
   },
   persist: true,
