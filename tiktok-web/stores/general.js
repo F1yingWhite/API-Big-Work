@@ -147,7 +147,12 @@ export const useGeneralStore = defineStore('general', {
         } catch (error) {
             console.error('Error fetching previous video:', error);
         }
+    },
+
+    async deleteVideo (id) {
+      await $axios.delete(`/api/movie/${id}`);
     }
   },
+
   persist: true,
 })

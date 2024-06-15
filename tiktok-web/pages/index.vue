@@ -30,4 +30,19 @@ onMounted(async () => {
   }
 })
 
+// 监听用户登录状态变化
+watch(
+  () => $userStore.isAuthenticated,
+  async (isAuthenticated) => {
+    if (isAuthenticated) {
+      // 用户登录后重新获取推荐视频
+      await $generalStore.getAuthPosts()
+      console.log('Posts updated:', posts)
+    } else {
+      // 用户登出后重新获取默认视频
+      await $generalStore.getNoauthPosts()
+      console.log('Default Posts:', posts)
+    }
+  }
+)
 </script>

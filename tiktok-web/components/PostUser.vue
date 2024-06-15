@@ -1,6 +1,5 @@
 <template>
     <div
-        @click="$event => displayPost(post)"
         @mouseenter="$event => isHover(true)"
         @mouseleave="$event => isHover(false)"
         class="relative brightness-90 hover:brightness-[1.1] cursor-pointer"    
@@ -11,14 +10,14 @@
         >
             <Icon class="animate-spin ml-1" name="mingcute:loading-line" size="100" color="#FFFFFF"/>
         </div>
-
         <div>
             <video 
                 ref="video"
+                @click="$event => displayPost(post)"
                 muted
                 loop
                 class="aspect-[3/4] object-cover rounded-md"
-                :src="`http://127.0.0.1:8888/api/movie/${post.path}`"
+                :src="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`"
             />
         </div>
 
@@ -30,6 +29,15 @@
                 <Icon name="gg:loadbar-sound" size="20"/>
                 {{ post.like }}%
                 <Icon class="ml-1" name="tabler:alert-circle" size="16"/>
+                <div class="text-[18px] font-semibold flex items-center justify-between ">
+                    <Icon
+                        v-if="true"
+                        @click="deleteVideo(post.ID)"
+                        class="cursor-pointer"
+                        name="material-symbols:delete-outline-sharp"
+                        size="25"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -64,6 +72,17 @@ onBeforeUnmount(() => {
         video.value.src = ''
     }
 })
+
+const deleteVideo = async (id) => {
+    try {
+        await $generalStore.deleteVideo(id);
+        console.log(`Video with ID ${id} deleted successfully.`);
+        router.go(0); // 刷新页面
+        // setTimeout(() => router.push(`/profile/${route.params.id}`), 300)
+    } catch (error) {
+        console.error('Error deleting video:', error);
+    }
+}
 
 const displayPost = (post) => {
     $generalStore.setBackUrl("/profile/" + route.params.id)

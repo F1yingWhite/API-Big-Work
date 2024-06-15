@@ -119,11 +119,15 @@ func (s *GetMovieByAuthor) Handle(c *gin.Context) (any, error) {
 }
 
 type DeleteMovie struct {
-	ID uint `form:"id" binding:"required"`
 }
 
 func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
-	movie, err := models.GetMovieByID(int(s.ID))
+	movie_id := c.Param("id")
+	movieID, err := strconv.ParseUint(movie_id, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	movie, err := models.GetMovieByID(int(movieID))
 	if err != nil {
 		return nil, err
 	}
