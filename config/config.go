@@ -70,12 +70,12 @@ func ReadConfig() (*Config, error) {
 }
 
 func InitLog(config *Config) {
-	f, err := os.OpenFile(config.LogFile, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(config.LogFile, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
 	if err != nil {
 		panic(err)
 	}
 	log.SetOutput(f)
-	log.SetFlags(log.LstdFlags | log.Lshortfile | log.LUTC)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	gin.DefaultWriter = f
 }
 
