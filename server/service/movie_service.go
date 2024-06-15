@@ -4,6 +4,7 @@ import (
 	"API_BIG_WORK/models"
 	"errors"
 	"net/url"
+	"os"
 	"path"
 	"strconv"
 
@@ -118,11 +119,15 @@ func (s *GetMovieByAuthor) Handle(c *gin.Context) (any, error) {
 }
 
 type DeleteMovie struct {
-	ID uint `form:"id" binding:"required"`
 }
 
 func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
-	movie, err := models.GetMovieByID(int(s.ID))
+	movie_id := c.Param("id")
+	movieID, err := strconv.ParseUint(movie_id, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	movie, err := models.GetMovieByID(int(movieID))
 	if err != nil {
 		return nil, err
 	}
@@ -133,6 +138,8 @@ func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
 	if err != nil {
 		return nil, err
 	}
+	//删除对应的文件	movie.Path
+	os.Remove(path.Join("./", movie.Path))
 	return nil, nil
 }
 

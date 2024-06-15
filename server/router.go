@@ -73,7 +73,7 @@ func InitRouter() *gin.Engine {
 				// GET api/movie/author | 获取作者的电影
 				movies.GET("author", service.HandlerBindQuery(&service.GetMovieByAuthor{}))
 				// DELETE api/movie | 删除电影
-				movies.DELETE("", service.HandlerBindQuery(&service.DeleteMovie{}))
+				movies.DELETE("/:id", service.HandlerBindQuery(&service.DeleteMovie{}))
 				// POST api/movie | 上传电影
 				movies.POST("", service.HandlerBind(&service.UploadMovie{}))
 				// GET api/movie/recommend | 推荐电影
