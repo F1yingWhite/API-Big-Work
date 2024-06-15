@@ -7,9 +7,27 @@ import (
 	"API_BIG_WORK/server/middlewares"
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 	"sync/atomic"
 	"time"
 )
+
+func runPnpmDev() {
+	// 执行 PNPM dev 命令
+	cmd := exec.Command("pnpm", "--dir", "tiktok-web", "dev")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = cmd.Wait()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func Init() {
 	config.InitFlag()
@@ -19,7 +37,9 @@ func Init() {
 	}
 	config.InitLog(cfg)
 	models.InitDB(cfg)
-
+	if config.Dev {
+		go runPnpmDev()
+	}
 	go func() {
 		for {
 			time.Sleep(time.Second)
