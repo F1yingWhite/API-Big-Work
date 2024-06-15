@@ -4,6 +4,7 @@ import (
 	"API_BIG_WORK/models"
 	"errors"
 	"net/url"
+	"os"
 	"path"
 	"strconv"
 
@@ -133,6 +134,8 @@ func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
 	if err != nil {
 		return nil, err
 	}
+	//删除对应的文件	movie.Path
+	os.Remove(path.Join("./", movie.Path))
 	return nil, nil
 }
 
