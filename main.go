@@ -12,6 +12,7 @@ import (
 )
 
 func Init() {
+	config.InitFlag()
 	cfg, err := config.ReadConfig()
 	if err != nil {
 		log.Panicln(err)

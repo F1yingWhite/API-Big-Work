@@ -1,0 +1,27 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/user/login           --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func4 (8 handlers)
+[GIN-debug] POST   /api/user/register        --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func5 (8 handlers)
+[GIN-debug] PUT    /api/user/password        --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func6 (8 handlers)
+[GIN-debug] GET    /api/movie/list           --> API_BIG_WORK/server.InitRouter.HandlerBindQuery.HandlerWithBindType.func7 (8 handlers)
+[GIN-debug] GET    /api/movie/noauth/movies/:name --> API_BIG_WORK/server/service.DowFileWithOutAuth (8 handlers)
+[GIN-debug] GET    /api/user                 --> API_BIG_WORK/server.InitRouter.HandlerNoBind.HandlerWithBindType.func8 (9 handlers)
+[GIN-debug] PUT    /api/user/username        --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func9 (9 handlers)
+[GIN-debug] DELETE /api/user                 --> API_BIG_WORK/server.InitRouter.HandlerNoBind.HandlerWithBindType.func10 (9 handlers)
+[GIN-debug] GET    /api/movie                --> API_BIG_WORK/server.InitRouter.HandlerBindQuery.HandlerWithBindType.func11 (9 handlers)
+[GIN-debug] GET    /api/movie/movies/:name   --> API_BIG_WORK/server/service.DowFile (9 handlers)
+[GIN-debug] POST   /api/movie/like/:id       --> API_BIG_WORK/server.InitRouter.HandlerNoBind.HandlerWithBindType.func12 (9 handlers)
+[GIN-debug] GET    /api/movie/like/:id       --> API_BIG_WORK/server.InitRouter.HandlerNoBind.HandlerWithBindType.func13 (9 handlers)
+[GIN-debug] GET    /api/movie/author         --> API_BIG_WORK/server.InitRouter.HandlerBindQuery.HandlerWithBindType.func14 (9 handlers)
+[GIN-debug] DELETE /api/movie/:id            --> API_BIG_WORK/server.InitRouter.HandlerBindQuery.HandlerWithBindType.func15 (9 handlers)
+[GIN-debug] POST   /api/movie                --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func16 (9 handlers)
+[GIN-debug] GET    /api/movie/recommend      --> API_BIG_WORK/server.InitRouter.HandlerNoBind.HandlerWithBindType.func17 (9 handlers)
+[GIN-debug] POST   /api/movie/up             --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func18 (9 handlers)
+[GIN-debug] POST   /api/movie/down           --> API_BIG_WORK/server.InitRouter.HandlerBind.HandlerWithBindType.func19 (9 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8888

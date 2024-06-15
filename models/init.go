@@ -47,9 +47,11 @@ func sqliteDB(config *gorm.Config) (*gorm.DB, error) {
 func InitDB(cfg *config.Config) {
 	var db *gorm.DB
 	var err error
-
-	// db, err = postgresDB(cfg.Dsn, &gorm.Config{})
-	db, err = sqliteDB(&gorm.Config{})
+	if config.Postgresql {
+		db, err = postgresDB(cfg.Dsn, &gorm.Config{})
+	} else {
+		db, err = sqliteDB(&gorm.Config{})
+	}
 
 	if err != nil {
 		log.Panicf("无法连接数据库，%s", err)
