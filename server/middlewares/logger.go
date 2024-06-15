@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,7 @@ func Logger() gin.HandlerFunc {
 
 		// 检查 Content-Type 头，判断请求是否包含文件
 		contentType := c.GetHeader("Content-Type")
-		if contentType != "" && (contentType == "multipart/form-data" || contentType == "application/octet-stream") {
+		if contentType != "" && (strings.Contains(contentType, "multipart/form-data")) {
 			log.Printf("[LogID:%s] Request: %s %s", logID, c.Request.Method, c.Request.RequestURI)
 		} else {
 			body, _ := c.GetRawData()
