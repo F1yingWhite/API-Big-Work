@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/glebarez/sqlite"
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -30,11 +31,25 @@ func postgresDB(dsn string, config *gorm.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
+func sqliteDB(config *gorm.Config) (*gorm.DB, error) {
+	db, err := gorm.Open(sqlite.Open("movie.db"), config)
+	if err != nil {
+		return nil, err
+	}
+	sqlDB, err := db.DB()
+	sqlDB.SetMaxOpenConns(1)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
 func InitDB(cfg *config.Config) {
 	var db *gorm.DB
 	var err error
 
-	db, err = postgresDB(cfg.Dsn, &gorm.Config{})
+	// db, err = postgresDB(cfg.Dsn, &gorm.Config{})
+	db, err = sqliteDB(&gorm.Config{})
 
 	if err != nil {
 		log.Panicf("无法连接数据库，%s", err)
