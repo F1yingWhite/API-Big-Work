@@ -87,7 +87,6 @@
   })
   
   watch(() => posts.value, () => {
-    console.log('Posts updated:', posts.value)
     setTimeout(() => {
       show.value = true
     }, 300)
