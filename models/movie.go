@@ -66,15 +66,15 @@ func GetMovieByPath(path string) (Movie, error) {
 }
 
 // 推荐电影 每次推荐一个，推荐like最高的，如果like相同，推荐最新的，用户已经看过的不推荐
-func RecommendMovie(userID string) ([]Movie, error) {
+func RecommendMovie(userID string, page, pageSize int) ([]Movie, error) {
 	var movies []Movie
 	err := DB.Joins("LEFT JOIN histories ON movies.id = histories.movie_id AND histories.user_id = ?", userID).
 		Where("histories.movie_id IS NULL").
 		Order("movies.likes DESC, movies.created_at DESC").
-		Limit(5).
-		Find(&movies).Error
+		Offset((page - 1) * pageSize).Limit(pageSize).Find(&movies).Error
 	return movies, err
 }
+
 func DeleteMovie(id uint) error {
 	return DB.Where("id = ?", id).Delete(&Movie{}).Error
 }

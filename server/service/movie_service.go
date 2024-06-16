@@ -169,11 +169,13 @@ func (s *UploadMovie) Handle(c *gin.Context) (any, error) {
 }
 
 type RecommendMovie struct {
+	Page     int `form:"page" binding:"required"`
+	PageSize int `form:"pageSize" binding:"required"`
 }
 
 func (s *RecommendMovie) Handle(c *gin.Context) (any, error) {
 	id := c.GetString("id")
-	RecommendMovies, err := models.RecommendMovie(id)
+	RecommendMovies, err := models.RecommendMovie(id, s.Page, s.PageSize)
 	if err != nil {
 		return nil, err
 	}
