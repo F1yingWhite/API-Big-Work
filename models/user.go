@@ -1,7 +1,6 @@
 package models
 
 import (
-	"API_BIG_WORK/config"
 	"API_BIG_WORK/utils"
 	"errors"
 
@@ -24,7 +23,7 @@ func DeleteUser(ID string) error {
 }
 
 func CreateUser(ID string, username string, password string) error {
-	password, err := utils.HashPassword(password, config.CFG.Salt)
+	password, err := utils.HashPassword(password)
 	if err != nil {
 		return err
 	}
@@ -51,14 +50,15 @@ func GetUserByID(id string) (User, error) {
 func UpdateUserPassword(ID string, old_password string, new_password string) error {
 	if user, err := GetUserByID(ID); err != nil {
 		return err
-	} else if !utils.ComparePasswords(user.Password, old_password, config.CFG.Salt) {
+	} else if !utils.ComparePasswords(user.Password, old_password) {
 		return errors.New("密码错误")
 	} else {
-		if password, err := utils.HashPassword(new_password, config.CFG.Salt); err != nil {
+		password, err := utils.HashPassword(new_password)
+		if err != nil {
 			return err
-		} else {
-			return DB.Model(&user).Update("password", password).Error
 		}
+		return DB.Model(&user).Update("password", password).Error
+
 	}
 }
 

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"API_BIG_WORK/config"
 	"API_BIG_WORK/models"
 	"API_BIG_WORK/utils"
 	"errors"
@@ -19,7 +18,7 @@ func (s *Login) Handle(c *gin.Context) (any, error) {
 	if err != nil {
 		return nil, errors.New("用户不存在")
 	}
-	if !utils.ComparePasswords(user.Password, s.Password, config.CFG.Salt) {
+	if !utils.ComparePasswords(user.Password, s.Password) {
 		return nil, errors.New("密码错误")
 	}
 	//得到token

@@ -1,37 +1,18 @@
 package utils
 
-import (
-	"crypto/subtle"
-	"encoding/base64"
-	"fmt"
+import "golang.org/x/crypto/bcrypt"
 
-	"golang.org/x/crypto/argon2"
-)
-
-func HashPassword(password string, salt string) (string, error) {
-	time := uint32(1)
-	memory := uint32(1024)
-	threads := uint8(2)
-	keyLen := uint32(32)
-
-	hashedPassword := argon2.IDKey([]byte(password), []byte(salt), time, memory, threads, keyLen)
-
-	return base64.StdEncoding.EncodeToString(hashedPassword), nil
+// HashPassword hashes the password with bcrypt and returns the hashed password
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), nil
 }
 
-func ComparePasswords(hashedPassword string, password string, salt string) bool {
-	time := uint32(1)
-	memory := uint32(1024)
-	threads := uint8(2)
-	keyLen := uint32(32)
-
-	decodedHashedPassword, err := base64.StdEncoding.DecodeString(hashedPassword)
-	if err != nil {
-		fmt.Println("Error decoding string", err.Error())
-		return false
-	}
-
-	derivedKey := argon2.IDKey([]byte(password), []byte(salt), time, memory, threads, keyLen)
-
-	return subtle.ConstantTimeCompare(decodedHashedPassword, derivedKey) == 1
+// ComparePasswords checks whether the password is correct or not
+func ComparePasswords(hashedPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	return err == nil
 }

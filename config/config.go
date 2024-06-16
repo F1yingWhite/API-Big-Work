@@ -16,7 +16,6 @@ type Config struct {
 	Dsn              string `yaml:"dsn"`
 	LogFile          string `yaml:"log_file"`
 	JWTSigningString string `yaml:"jwt_signing_string"`
-	Salt             string `yaml:"salt"`
 }
 
 func ReadConfig() (*Config, error) {
@@ -30,8 +29,7 @@ func ReadConfig() (*Config, error) {
 		config := &Config{
 			Dsn:              "host=localhost user=postgres password=1234 dbname=API_BIG_WORK port=5432 sslmode=disable",
 			LogFile:          "log.txt",
-			JWTSigningString: generateRandomString(20),
-			Salt:             generateRandomString(20),
+			JWTSigningString: GenerateRandomString(32),
 		}
 
 		data, err := yaml.Marshal(&config)
@@ -79,7 +77,7 @@ func InitLog(config *Config) {
 	gin.DefaultWriter = f
 }
 
-func generateRandomString(length int) string {
+func GenerateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz" +
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	b := make([]byte, length)
