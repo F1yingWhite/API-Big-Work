@@ -10,7 +10,6 @@ import (
 func TokenAuthorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
-		// printf("")
 		jwt, err := utils.ParseToken(token)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
