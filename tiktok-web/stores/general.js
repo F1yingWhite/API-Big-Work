@@ -103,9 +103,14 @@ export const useGeneralStore = defineStore('general', {
     },
 
     // 登录，给用户推荐视频
-    async getAuthPosts() {
+    async getAuthPosts(page, pageSize) {
       try {
-        const response = await $axios.get(`/api/movie/recommend`);
+        const response = await $axios.get(`/api/movie/recommend`, {
+          params: {
+            page,
+            pageSize,
+          },
+        });
         
         if (response && response.data && response.data.data) {
           const videos = response.data.data;
