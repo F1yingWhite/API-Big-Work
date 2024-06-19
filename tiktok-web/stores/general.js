@@ -103,8 +103,8 @@ export const useGeneralStore = defineStore('general', {
       try {
         const response = await $axios.get(`/api/movie/recommend`, {
           params: {
-            page,
-            pageSize,
+            page: page,
+            pageSize: pageSize
           },
         });
         

@@ -234,9 +234,10 @@ onMounted(async () => {
         await $generalStore.getPostById(route.params.id)
         likeCount.value = $generalStore.selectedPost.like;
 
+        const timestamp = new Date().getTime();
         const videoPath = $generalStore.selectedPost.path;
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://127.0.0.1:8888/api/movie/${videoPath}`, {
+        const response = await fetch(`http://127.0.0.1:8888/api/movie/${videoPath}?timestamp=${timestamp}`, {
             headers: {
                 'Authorization': token
             }
