@@ -14,8 +14,7 @@
 环境需求:需要安装golang和postgresql和nodejs,并且把视频的mp4解压到movies文件夹下,首次运行自动创建数据表和根据mp4文件创建数据.
 
 1. 运行`go mod tidy`下载go依赖
-2. 运行`go run main.go`启动后端服务,此时会生成.`config.yaml`文件,不出意外会爆错退出,如果没退出手动退一下
-3. 修改`config.yaml`文件中的数据库配置
-4. 运行`go run main.go`再次启动后端服务,此时后端成功启动
-5. 进入titoke-web下运行`npm install`安装前端依赖
-6. 运行`npm run dev`启动前端服务
+2. 进入titoke-web目录下运行`npm install`安装前端依赖
+3. 运行`go run main.go --dev`同时启动前后端服务,此时会生成.`config.yaml`文件，在里面可以配置postgresql的dsn，日志文件位置等，默认数据库是sqlite，所以不配置也可以运行
+4. (可选)修改`config.yaml`文件中的数据库配置后可以使用go run main.go --postgresql --dev指定postgresql当数据库
+5. (可选)运行`npm run dev`启动前端服务
