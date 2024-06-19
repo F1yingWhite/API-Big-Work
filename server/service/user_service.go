@@ -48,7 +48,7 @@ func (s *Register) Handle(c *gin.Context) (any, error) {
 		return nil, errors.New("密码必须包含大小写字母和数字")
 	}
 	if err := models.CreateUser(s.ID, s.Name, s.Password); err != nil {
-		return nil, err
+		return nil, errors.New("用户已存在")
 	}
 	return nil, nil
 }
