@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', {
           throw new Error(error.response.data.error)
         } else {
           console.error(error)
-          throw new Error('注册失败，账号已存在。')
+          throw new Error(error)
         }
       }
     },

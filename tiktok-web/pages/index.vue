@@ -45,7 +45,7 @@ const loadPosts = async () => {
       console.log('Posts updated:', posts);
     } else {
       // 冷启动
-      await $generalStore.getNoauthPosts();
+      await $generalStore.getNoauthPosts(currentPage.value, pageSize.value);
       console.log('Default Posts:', posts);
     }
   } catch (error) {

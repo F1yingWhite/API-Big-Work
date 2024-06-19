@@ -71,12 +71,8 @@ export const useGeneralStore = defineStore('general', {
     },
 
     // 未登录，获得所有的视频列表
-    async getNoauthPosts() {
-      // TODO:这里的接口要改
+    async getNoauthPosts(page, pageSize) {
       try {
-        // TODO:后期调整下页数和每页数目
-        const page = 1; // 页码
-        const pageSize = 5; // 每页条数
         const response = await $axios.get(`/api/movie/list`, {
           params: {
             page: page,
