@@ -40,6 +40,13 @@ type Register struct {
 }
 
 func (s *Register) Handle(c *gin.Context) (any, error) {
+	//密码复杂度验证,必须包含大小写字母和数字且长度大于等于8
+	if len(s.Password) < 8 {
+		return nil, errors.New("密码长度必须大于等于8")
+	}
+	if !utils.VerifyPassword(s.Password) {
+		return nil, errors.New("密码必须包含大小写字母和数字")
+	}
 	if err := models.CreateUser(s.ID, s.Name, s.Password); err != nil {
 		return nil, err
 	}
