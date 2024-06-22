@@ -2,6 +2,7 @@ package models
 
 import (
 	"API_BIG_WORK/config"
+	"API_BIG_WORK/utils"
 	"fmt"
 	"log"
 	"math/rand"
@@ -139,6 +140,10 @@ func InitData() {
 		}
 		filenameWithExtension := filepath.Base(mp4File)
 		filename := strings.TrimSuffix(filenameWithExtension, ".mp4")
-		CreateMovieWithLike(filename, fmt.Sprintf("user%d", r.Intn(20)), new_path, uint(rand.Intn(200000)))
+		hash, err := utils.CalculateFile(new_path)
+		if err != nil {
+			log.Println(err)
+		}
+		CreateMovieWithLike(filename, fmt.Sprintf("user%d", r.Intn(20)), new_path, uint(rand.Intn(200000)), hash)
 	}
 }

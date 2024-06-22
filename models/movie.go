@@ -12,25 +12,39 @@ type Movie struct {
 	Author string `json:"author"`
 	Likes  uint   `json:"like" gorm:"default:0;index"`
 	Path   string `json:"path"`
+	Hash   string `json:"hash"` //哈希值,用于判断是否重复上传
 }
 
-func CreateMovie(title string, author string, path string) error {
+func CreateMovie(title string, author string, path string, hash string) error {
 	movie := Movie{
 		Title:  title,
 		Author: author,
 		Likes:  0,
 		Path:   url.PathEscape(path),
+		Hash:   hash,
 	}
 	return DB.Create(&movie).Error
 }
 
-func CreateMovieWithLike(title string, author string, path string, like uint) error {
+func GetMovieByHash(hash string) (Movie, error) {
+	var movie Movie
+	err := DB.Where("hash = ?", hash).First(&movie).Error
+	return movie, err
+}
 
+func GetMovieCountsByHash(hash string) (int64, error) {
+	var count int64
+	err := DB.Model(&Movie{}).Where("hash = ?", hash).Count(&count).Error
+	return count, err
+}
+
+func CreateMovieWithLike(title string, author string, path string, like uint, hash string) error {
 	movie := Movie{
 		Title:  title,
 		Author: author,
 		Likes:  like,
 		Path:   url.PathEscape(path),
+		Hash:   hash,
 	}
 	return DB.Create(&movie).Error
 }

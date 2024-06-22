@@ -2,6 +2,7 @@ package service
 
 import (
 	"API_BIG_WORK/models"
+	"API_BIG_WORK/utils"
 	"errors"
 	"net/url"
 	"os"
@@ -134,12 +135,18 @@ func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
 	if movie.Author != c.GetString("id") {
 		return nil, errors.New("无权删除")
 	}
+	count, err := models.GetMovieCountsByHash(movie.Hash)
+	if err != nil {
+		return nil, err
+	}
+	if count == 1 {
+		//删除对应的文件	movie.Path
+		os.Remove(path.Join("./", movie.Path))
+	}
 	err = movie.Delete()
 	if err != nil {
 		return nil, err
 	}
-	//删除对应的文件	movie.Path
-	os.Remove(path.Join("./", movie.Path))
 	return nil, nil
 }
 
@@ -160,12 +167,28 @@ func (s *UploadMovie) Handle(c *gin.Context) (any, error) {
 		return nil, errors.New("文件格式错误")
 	}
 	id := c.GetString("id")
-	path := path.Join("movies", uuid.New().String()+".mp4")
-	err = c.SaveUploadedFile(file, path)
+	// 计算文件的哈希值
+	hash, err := utils.CalculateFileHash(file)
 	if err != nil {
 		return nil, err
 	}
-	return nil, models.CreateMovie(videoName, id, path)
+	// 查看有没有相同的哈希值
+	var target_path string
+	movie, err := models.GetMovieByHash(hash)
+	if err == nil {
+		target_path, err = url.PathUnescape(movie.Path)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		// 如果没有就要保存文件
+		target_path = path.Join("movies", uuid.New().String()+".mp4")
+		err = c.SaveUploadedFile(file, target_path)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, models.CreateMovie(videoName, id, target_path, hash)
 }
 
 type RecommendMovie struct {
