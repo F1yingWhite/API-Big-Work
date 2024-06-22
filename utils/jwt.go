@@ -13,10 +13,11 @@ type JWT struct {
 }
 
 func CreateToken(id string) (string, error) {
+	var TokenExpireDuration = time.Duration(config.CFG.JWTExpire) * time.Second
 	return jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), JWT{
 		id,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(config.CFG.JWTExpire))),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)),
 		},
 	}).SignedString([]byte(config.CFG.JWTSigningString))
 }

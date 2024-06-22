@@ -30,7 +30,7 @@ func (s *Login) Handle(c *gin.Context) (any, error) {
 	}
 	// 将token存入redis
 	if config.Redis {
-		if err := models.Redis.Set(token, user.ID, time.Duration(config.CFG.JWTExpire)).Err(); err != nil {
+		if err := models.Redis.Set(token, user.ID, time.Duration(config.CFG.JWTExpire)*time.Second).Err(); err != nil {
 			return nil, err
 		}
 	}
