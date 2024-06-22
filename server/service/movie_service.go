@@ -141,7 +141,11 @@ func (s *DeleteMovie) Handle(c *gin.Context) (any, error) {
 	}
 	if count == 1 {
 		//删除对应的文件	movie.Path
-		os.Remove(path.Join("./", movie.Path))
+		path, err := url.PathUnescape(movie.Path)
+		if err != nil {
+			return nil, err
+		}
+		os.Remove(path)
 	}
 	err = movie.Delete()
 	if err != nil {
