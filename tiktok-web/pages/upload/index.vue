@@ -98,7 +98,6 @@
                     <video
                         autoplay
                         loop
-                        muted
                         class="absolute rounded-xl object-cover z-10 p-[13px] w-full h-full" 
                         :src="fileDisplay"
                     />

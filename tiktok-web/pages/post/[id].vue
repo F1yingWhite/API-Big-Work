@@ -53,7 +53,6 @@
                 v-if="$generalStore.selectedPost.path"
                 ref="video"
                 loop
-                muted
                 class="h-screen mx-auto"
                 />
             </div>

@@ -47,7 +47,6 @@
                         v-if="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`" 
                         ref="video"
                         loop
-                        muted
                         class="rounded-xl object-cover mx-auto h-full" 
                         :src="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`" 
                     />

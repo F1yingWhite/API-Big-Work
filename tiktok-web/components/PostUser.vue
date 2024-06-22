@@ -14,7 +14,6 @@
             <video 
                 ref="video"
                 @click="$event => displayPost(post)"
-                muted
                 loop
                 class="aspect-[3/4] object-cover rounded-md"
                 :src="`http://127.0.0.1:8888/api/movie/noauth/${post.path}`"
