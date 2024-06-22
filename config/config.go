@@ -16,6 +16,10 @@ type Config struct {
 	Dsn              string `yaml:"dsn"`
 	LogFile          string `yaml:"log_file"`
 	JWTSigningString string `yaml:"jwt_signing_string"`
+	RedisDsn         string `yaml:"redis_dsn"`
+	RedisPassword    string `yaml:"redis_password"`
+	RedisDB          int    `yaml:"redis_db"`
+	JWTExpire        int    `yaml:"jwt_expire"`
 }
 
 func ReadConfig() (*Config, error) {
@@ -30,6 +34,10 @@ func ReadConfig() (*Config, error) {
 			Dsn:              "host=localhost user=postgres password=1234 dbname=API_BIG_WORK port=5432 sslmode=disable",
 			LogFile:          "log.txt",
 			JWTSigningString: GenerateRandomString(32),
+			RedisDsn:         "localhost:6379",
+			RedisPassword:    "",
+			RedisDB:          0,
+			JWTExpire:        3600,
 		}
 
 		data, err := yaml.Marshal(&config)

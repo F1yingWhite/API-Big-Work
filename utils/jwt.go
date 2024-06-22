@@ -12,13 +12,11 @@ type JWT struct {
 	jwt.RegisteredClaims
 }
 
-const TokenExpireDuration = time.Hour * 2
-
 func CreateToken(id string) (string, error) {
 	return jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), JWT{
 		id,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(config.CFG.JWTExpire))),
 		},
 	}).SignedString([]byte(config.CFG.JWTSigningString))
 }

@@ -1,9 +1,11 @@
 package service
 
 import (
+	"API_BIG_WORK/config"
 	"API_BIG_WORK/models"
 	"API_BIG_WORK/utils"
 	"errors"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +26,10 @@ func (s *Login) Handle(c *gin.Context) (any, error) {
 	//得到token
 	token, err := utils.CreateToken(user.ID)
 	if err != nil {
+		return nil, err
+	}
+	// 将token存入redis
+	if err := models.Redis.Set(token, user.ID, time.Duration(config.CFG.JWTExpire)).Err(); err != nil {
 		return nil, err
 	}
 	return []map[string]interface{}{

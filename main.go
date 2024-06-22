@@ -58,5 +58,3 @@ func main() {
 		log.Panicln(err)
 	}
 }
-
-//git连接测试

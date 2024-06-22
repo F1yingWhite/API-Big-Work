@@ -11,12 +11,14 @@ import (
 	"time"
 
 	"github.com/glebarez/sqlite"
+	"github.com/go-redis/redis"
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
+var Redis *redis.Client
 
 func postgresDB(dsn string, config *gorm.Config) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), config)
@@ -44,6 +46,16 @@ func sqliteDB(config *gorm.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
+func redisInit() (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     config.CFG.RedisDsn,
+		Password: config.CFG.RedisPassword,
+		DB:       config.CFG.RedisDB,
+	})
+	_, err := client.Ping().Result()
+	return client, err
+}
+
 func InitDB(cfg *config.Config) {
 	var db *gorm.DB
 	var err error
@@ -55,6 +67,15 @@ func InitDB(cfg *config.Config) {
 
 	if err != nil {
 		log.Panicf("无法连接数据库，%s", err)
+		panic(err)
+	}
+
+	if config.Redis {
+		Redis, err = redisInit()
+		if err != nil {
+			log.Panicf("无法连接Redis，%s", err)
+			panic(err)
+		}
 	}
 
 	DB = db
