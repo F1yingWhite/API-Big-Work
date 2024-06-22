@@ -13,7 +13,7 @@ import (
 var CFG Config
 
 type Config struct {
-	Dsn              string `yaml:"dsn"`
+	PostgresqlDsn    string `yaml:"postgresql_dsn"`
 	LogFile          string `yaml:"log_file"`
 	JWTSigningString string `yaml:"jwt_signing_string"`
 	RedisDsn         string `yaml:"redis_dsn"`
@@ -31,7 +31,7 @@ func ReadConfig() (*Config, error) {
 		}
 
 		config := &Config{
-			Dsn:              "host=localhost user=postgres password=1234 dbname=API_BIG_WORK port=5432 sslmode=disable",
+			PostgresqlDsn:    "host=localhost user=postgres password=1234 dbname=API_BIG_WORK port=5432 sslmode=disable",
 			LogFile:          "log.txt",
 			JWTSigningString: GenerateRandomString(32),
 			RedisDsn:         "localhost:6379",

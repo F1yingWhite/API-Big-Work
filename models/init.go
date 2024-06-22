@@ -61,7 +61,7 @@ func InitDB(cfg *config.Config) {
 	var db *gorm.DB
 	var err error
 	if config.Postgresql {
-		db, err = postgresDB(cfg.Dsn, &gorm.Config{})
+		db, err = postgresDB(cfg.PostgresqlDsn, &gorm.Config{})
 	} else {
 		db, err = sqliteDB(&gorm.Config{})
 	}
