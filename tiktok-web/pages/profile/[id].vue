@@ -16,7 +16,6 @@
             <div class="text-[18px] truncate">{{ $profileStore.name }}</div>
             <button
               v-if="$profileStore.id === $userStore.id"
-              @click="$event => $generalStore.isEditProfileOpen = true"
               class="flex item-center rounded-md py-1.5 px-3.5 mt-3 text-[15px] font-semibold border hover:bg-gray-100"
             >
               <Icon class="mt-0.5 mr-1" name="mdi:pencil" size="18" />
@@ -78,6 +77,10 @@
   const route = useRoute()
   let show = ref(false)
   
+  watchEffect(() => {
+    console.log($generalStore.isEditProfileOpen);
+  });
+
   onMounted(async () => {
     try {
       await $profileStore.getProfile(route.params.id)

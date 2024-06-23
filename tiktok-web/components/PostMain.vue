@@ -152,7 +152,7 @@ const isLoggedIn = (id) => {
         $generalStore.isLoginOpen = true
         return
     }
-    setTimeout(() => router.push(`/profile/${id}`), 200)
+    setTimeout(() => router.push(`/profile/${post.id}`), 200)
 }
 
 // TODO:这里的路由应该要改

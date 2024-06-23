@@ -12,10 +12,10 @@
                 <div class="text-[22px] font-medium">
                     编辑简介
                 </div>
-                <button @click="$generalStore.isEditProfileOpen = false">
+                <button @click="closeOverlay()">
                     <Icon name="mdi:close" size="25"/>
                 </button>
-            </div>
+            </div> 
 
             <div class="h-[calc(500px-200px)]" :class="!uploadedImage ? 'mt-16' : 'mt-[58px]'">
                 <div v-if="!uploadedImage">
@@ -149,7 +149,7 @@
                     class="flex items-center justify-end"
                 >
                     <button 
-                        @click="uploadedImage = null"
+                        @click="closeOverlay()"
                         class="flex items-center border rounded-sm px-3 py-[6px] hover:bg-gray-100"
                     >
                         <span class="px-2 font-medium text-[15px]">取消</span>
@@ -191,6 +191,14 @@
     let userName = ref(null)
     let userBio = ref(null)
     let isUpdated = ref(false)
+    
+    watchEffect(() => {
+        console.log($generalStore.isEditProfileOpen);
+    });
+
+    const closeOverlay = async () => {
+        $generalStore.isEditProfileOpen = false;
+    };
 
     const getUploadedImage = (e) => {
         file.value = e.target.files[0]
